@@ -88,36 +88,72 @@ app.get("/form", (req, res) => {
 });
 
 // Handle the form submission
-app.post("/form", async (req, res) => {
-    try {
-        // Create a new product instance with the submitted data
-        const newProduct = new Product({
-            StudentID: req.body.StudentID,
-            StudentName: req.body.StudentName,
-            TypeofInternship: req.body.TypeofInternship,
-            Counsellor_InternalGuide: req.body.Counsellor_InternalGuide,
-            CompanyName: req.body.CompanyName,
-            CompanyAddress: req.body.CompanyAddress,
-            CompanyCity: req.body.CompanyCity,
-            CompanyState: req.body.CompanyState,
-            HRemailID: req.body.HRemailID,
-            HRphonenumber: req.body.HRphonenumber,
-            TypeofProject: req.body.TypeofProject,
-            ProjectTitle: req.body.ProjectTitle,
-            ToolsandTechnology: req.body.ToolsandTechnology,
-        });
+// app.post("/form", async (req, res) => {
+//     try {
+//         // Create a new product instance with the submitted data
+//         const newProduct = new Product({
+//             StudentID: req.body.StudentID,
+//             StudentName: req.body.StudentName,
+//             TypeofInternship: req.body.TypeofInternship,
+//             Counsellor_InternalGuide: req.body.Counsellor_InternalGuide,
+//             CompanyName: req.body.CompanyName,
+//             CompanyAddress: req.body.CompanyAddress,
+//             CompanyCity: req.body.CompanyCity,
+//             CompanyState: req.body.CompanyState,
+//             HRemailID: req.body.HRemailID,
+//             HRphonenumber: req.body.HRphonenumber,
+//             TypeofProject: req.body.TypeofProject,
+//             ProjectTitle: req.body.ProjectTitle,
+//             ToolsandTechnology: req.body.ToolsandTechnology,
+//         });
 
-        // Save the new product to the database
-        await newProduct.save();
+//         // Save the new product to the database
+//         await newProduct.save();
+//         res.set({
+//             "Allow-access-Allow-Origin": '*'
+//         })
+//         // Render the confirmation page with the submitted data
+//         res.render("confirmationform", { data: req.body });
+//     } catch (error) {
+//         console.error(error);
+//         res.status(500).send("Internal Server Error");
+//     }
+// });
+app.post("/form",(req,res)=>{
+    var studentId = req.body.studentId;
+    var semester = req.body.semester;
+    var companyName = req.body.companyName;
+    var companyAddress = req.body.companyAddress;
+    var hrDetails = req.body.hrDetails;
+    var hrContact = req.body.hrContact;
+    var duration = req.body.duration;
+    var startDate = req.body.startDate;
+    var endDate = req.body.endDate;
+    var requiredNOC = req.body.requiredNOC;
 
-        // Render the confirmation page with the submitted data
-        res.render("confirmationform", { data: req.body });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error");
+    var data = {
+        "studentId": studentId,
+        "semester" : semester,
+        "companyName" : companyName,
+        "companyAddress": companyAddress,
+        "hrDetails": hrDetails,
+        "hrContact": hrContact,
+        "duration": duration,
+        "startDate": startDate,
+        "endDate": endDate,
+        "requiredNOC": requiredNOC,
     }
-});
-  
+
+    db.collection('products').insertOne(data,(err,collection)=>{
+        if(err){
+            throw err;
+        }
+        console.log("Record Inserted Successfully");
+    });
+
+    return res.redirect('dashboard.html')
+
+})  
 
 
 
