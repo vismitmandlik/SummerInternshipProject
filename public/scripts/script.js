@@ -1,5 +1,5 @@
 function Location() {
-    window.location.href = "/dashboard"; // Change the URL to the route that renders dashboard.ejs
+    window.location.href = "/admin"; // Change the URL to the route that renders dashboard.ejs
 }
 
 function Confirmation() {
@@ -9,3 +9,4 @@ function Confirmation() {
 function Approval() {
     window.location.href = "/approved"; // Change the URL to the route for approved.ejs
 }
+
