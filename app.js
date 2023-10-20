@@ -6,6 +6,9 @@ const mongoose = require("mongoose");
 const ejs = require("ejs");
 const path = require("path");
 const Product = require("./models/product");
+const ExcelJS = require('exceljs');
+const PDFDocument = require('pdfkit');
+const bodyParser = require('body-parser');
 
 // Set up EJS as the template engine
 app.set("view engine", "ejs");
@@ -27,6 +30,7 @@ const PORT = process.env.PORT || 7000;
 const products_routes = require("./routes/products");
 
 // Middlewares
+app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use("/api/products", products_routes);
@@ -216,6 +220,9 @@ app.get("/viewdetails", async (req, res) => {
     }
 });
 
+app.get("/analytics", (req, res) => {
+  res.render("analytics");
+});
 // Update the student's status by StudentID
 app.post("/update-status", async (req, res) => {
     const { studentID, newStatus } = req.body;
@@ -234,6 +241,49 @@ app.post("/update-status", async (req, res) => {
     }
 });
 
+// Your data retrieval function for analytics
+async function fetchData(selectedColumns) {
+
+  const Product = mongoose.model("Product");
+  const data = await Product.find().sort({ StudentID: -1 }); // Sort by StudentID
+
+  // Filter the data based on selected columns
+  const filteredData = data.map(row =>
+      row.filter((col, index) => selectedColumns.includes(index.toString()))
+  );
+
+  return filteredData;
+}
+
+app.post('/generate-report', (req, res) => {
+  const { selectedColumns, reportFormat } = req.body;
+  const data = fetchData(selectedColumns);
+
+  if (reportFormat === 'excel') {
+      // Generate an Excel report
+      const workbook = new ExcelJS.Workbook();
+      const worksheet = workbook.addWorksheet('Report');
+      data.forEach(row => worksheet.addRow(row));
+
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+      res.setHeader('Content-Disposition', 'attachment; filename=report.xlsx');
+      workbook.xlsx.write(res).then(() => res.end());
+  } else if (reportFormat === 'pdf') {
+      // Generate a PDF report
+      const doc = new PDFDocument();
+      const pdfFilePath = 'report.pdf';
+
+      doc.pipe(fs.createWriteStream(pdfFilePath));
+      data.forEach(row => {
+          doc.text(row.join('\t'));
+      });
+      doc.end();
+
+      res.download(pdfFilePath, 'report.pdf');
+  } else {
+      res.status(400).send('Invalid report format');
+  }
+});
 
 
 
