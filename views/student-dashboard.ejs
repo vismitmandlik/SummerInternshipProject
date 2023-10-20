@@ -2,9 +2,11 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Dashboard</title>
-    <link rel="stylesheet" href="/public/css/style2.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Student-Dashboard</title>
+    <link rel="icon" href="../public/img/image-2.png" type="image">
+    <link rel="stylesheet" type="text/css" href="/public/css/style6.css" />
     <!-- Font Awesome Cdn Link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
     <script src="/public/scripts/script.js"></script>
@@ -12,31 +14,47 @@
 
 <body>
     <div class="navbarr">
-        <img class="charusat-logo" src="/public/img/charusat-logo.png" />
+        <img class="charusat-logo" src="../public/img/image-2.png" />
     </div>
     <div class="container">
         <nav>
             <ul>
                 <li>
                     <a href="#" class="logo">
-                        <img src="/assets/download.png" alt="">
-                        <span class="nav-item">Dashboard</span>
+                        <img src="/public/img/user-icon.png" alt="">
+                        <span class="nav-item">Student</span>
                     </a>
                 </li>
-                <li>
+                <!-- <li>
                     <a href="#">
                         <i class="fas fa-home"></i>
                         <span class="nav-item">Home</span>
                     </a>
-                </li>
+                </li> -->
                 <li>
                     <a href="">
                         <i class="fas fa-user"></i>
                         <span class="nav-item">Profile</span>
                     </a>
                 </li>
+
+                <!-- <li>
+                    <a href="">
+                        <i class="fas fa-chart-bar"></i>
+                        <span class="nav-item">Analytics</span>
+                    </a>
+                </li> -->
+
                 <li>
-                    <a href="" class="logout">
+                    <a href="">
+                        <i class="fas fa-cog"></i>
+                        <span class="nav-item">Settings</span>
+                    </a>
+                </li>
+
+
+                <li>
+                    <a href="/" class="logout">
                         <i class="fas fa-sign-out-alt"></i>
                         <span class="nav-item">Log out</span>
                     </a>
@@ -45,20 +63,22 @@
         </nav>
 
         <section class="main">
-
+            <div class="main-top">
+                <h1>Home</h1>
+                <i class="fas fa-user-cog"></i>
+            </div>
             <div class="main-skills">
                 <div class="card">
+                    <i class="fab fa-wordpress"></i>
+                    <h3>Approval Form</h3>
+                    <button type="button" class="button-solid" onclick="approval_form()">Click Here</button>
+                </div>
+                <div class="card">
                     <i class="fas fa-laptop-code"></i>
-                    <h3>Conformation Page</h3>
+                    <h3>Confirmation Form</h3>
                     <!-- <button>Click Here</button> -->
                     <button type="button" class="button-solid" onclick="Confirmation()">Click Here</button>
                 </div>
-                <div class="card">
-                    <i class="fab fa-wordpress"></i>
-                    <h3>Coming Soon</h3>
-                    <button>Click Here</button>
-                </div>
-
             </div>
         </section>
     </div>

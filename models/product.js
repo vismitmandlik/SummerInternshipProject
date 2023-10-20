@@ -1,62 +1,84 @@
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
-    StudentID:{
+    StudentID: {
         type: String,
-        //required:true,
-    },
+        required: true,
+        unique: true, // Ensure uniqueness of StudentID
+        index: true, // Create an index on StudentID
+        default: "Not Provided",
+      },
     StudentName:{
         type: String,
         //required:true,
+        default: "Not Provided", // Default value of "Not Provided"
     },
     TypeofInternship:{
         type: String,
-        // enum: { 
-        //     values: ["In company", "In house"],
-        //     message: `{VALUE} is SrNot supported`,
-        // },
+        default: "Not Provided", // Default value of "Not Provided"
     },
     Counsellor_InternalGuide:{
         type: String,
-        //required:true,
+        default: "Not Provided", // Default value of "Not Provided"
     },
     CompanyName: {
         type: String,
-        //required:true,
+        default: "Not Provided", // Default value of "Not Provided"
     },
     CompanyAddress: { 
         type: String,
-        //required:true,
+        default: "Not Provided", // Default value of "Not Provided"
     },
     CompanyCity: { 
         type: String,
-        //required:true,
+        default: "Not Provided", // Default value of "Not Provided"
     },
     CompanyState: { 
         type: String,
-        //required:true,
+        default: "Not Provided", // Default value of "Not Provided"
     },
     HRemailID: { 
         type: String,
-        //required:true,
+        default: "Not Provided", // Default value of "Not Provided"
     },
     HRphonenumber: { 
         type: String,
-        //required:true,
+        default: "Not Provided", // Default value of "Not Provided"
     },
     TypeofProject: { 
         type: String,
-       // required:true,
+        default: "Not Provided", // Default value of "Not Provided"
     },
     ProjectTitle: { 
         type: String,
-        //required:true,
+        default: "Not Provided", // Default value of "Not Provided"
     },
     ToolsandTechnology: { 
         type: String,
-        //required:false,
+        default: "Not Provided", // Default value of "Not Provided"
+    },
+    Status: { 
+        type: String,
+        default: "Pending", // Default value of "Not Provided"
+    },
+    Semester: { 
+        type: String,
+        default: "Not Provided", // Default value of "Not Provided"
+    },
+    Duration: { 
+        type: String,
+        default: "Not Provided", // Default value of "Not Provided"
+    },
+    StartDate: { 
+        type: Date,
+        default: "Not Provided", // Default value of "Not Provided"
+    },
+    EndDate: { 
+        type: Date,
+        default: "Not Provided", // Default value of "Not Provided"
     },
 
 });
+
 
 module.exports = mongoose.model('Product', productSchema);

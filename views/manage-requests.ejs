@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Internship Requests</title>
+    <link rel="icon" href="../public/img/image-2.png" type="image">
+    <link rel="stylesheet" type="text/css" href="../public/css/style4.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/public/scripts/script.js"></script>
+</head>
+<body>
+    <div class="navbarr">
+        <img class="charusat-logo" src="/public/img/image-2.png" />
+    </div>
+    <h1>Student Internship Details</h1>
+
+    <!-- Search bar -->
+    <div class="search-bar">
+        <input type="text" id="searchStudent" placeholder="Search by Student ID">
+        <button type="button" onclick="searchStudent()">Search</button>
+    </div>
+
+
+    <table id="student-table">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>View</th>
+            <th>Status</th>
+        </tr>
+        <% students.forEach((student) => { %>
+            <tr>
+                <td><%= student.StudentID %></td>
+                <td><%= student.StudentName %></td>
+                <td>
+                    <a href="/viewdetails?StudentID=<%= student.StudentID %>">View</a>
+                </td>
+                <td id="status-<%= student.StudentID %>"><%= student.Status %></td>
+            </tr>
+        <% }); %>
+    </table>
+    <div id="pagination-container">
+        <a href="/manage-requests?page=<%= currentPage - 1 %>" id="prev-button" <% if (currentPage <= 1) { %>disabled<% } %>>Previous</a>
+        <span id="page-number"><%= currentPage %></span>
+        <a href="/manage-requests?page=<%= currentPage + 1 %>" id="next-button" <% if (currentPage >= totalPages) { %>disabled<% } %>>Next</a>
+    </div>
+    
+    
+    <script>
+        const students = <%= JSON.stringify(students) %>; // Your student data
+    
+        const entriesPerPage = 20;
+        let currentPage = <%= currentPage %>; // Current page number
+        const totalPages = Math.ceil(students.length / entriesPerPage);
+    
+        const studentTable = document.getElementById("student-table");
+        const prevButton = document.getElementById("prev-button");
+        const nextButton = document.getElementById("next-button");
+        const pageNumber = document.getElementById("page-number");
+    
+        function updateTable() {
+            // Clear the table
+            entriesPerPage = data.entriesPerPage;
+            while (studentTable.rows.length > 1) {
+                studentTable.deleteRow(1);
+            }
+    
+            const startIdx = (currentPage - 1) * entriesPerPage;
+            const endIdx = Math.min(startIdx + entriesPerPage, students.length);
+    
+            for (let i = startIdx; i < endIdx; i++) {
+                const student = students[i];
+                const row = studentTable.insertRow();
+                row.insertCell(0).textContent = student.StudentID;
+                row.insertCell(1).textContent = student.StudentName;
+                console.log(StudentName);
+                const viewCell = row.insertCell(2);
+                const viewLink = document.createElement("a");
+                viewLink.textContent = "View";
+                viewLink.href = "/viewdetails?StudentID=" + student.StudentID; // Update link to use dynamic StudentID
+                viewCell.appendChild(viewLink);
+                const statusCell = row.insertCell(3);
+                statusCell.id = "status-" + student.StudentID;
+                statusCell.textContent = student.Status; // Display the initial status
+            }
+    
+            pageNumber.textContent = currentPage;
+            prevButton.disabled = currentPage <= 1;
+            nextButton.disabled = currentPage >= totalPages;
+        }
+    
+        // Initialize the page when it loads
+        document.addEventListener("DOMContentLoaded", function() {
+            currentPage = parseInt(<%= currentPage %>); // Parse currentPage from EJS variable
+            updateTable();
+        });
+       
+        function searchStudent() {
+            // Get the search query from the input field
+            const searchQuery = document.getElementById("searchStudent").value;
+
+            // Fetch student data and then filter it based on the search query
+            $.ajax({
+            type: 'GET',
+            url: '/get-students', // Use the new route to fetch students
+            success: function (students) {
+                const filteredStudents = students.filter(student => {
+                return student.StudentID.includes(searchQuery);
+                });
+
+                // Update the table with the filtered data
+                currentPage = 1; // Reset to the first page
+                totalPages = Math.ceil(filteredStudents.length / entriesPerPage);
+
+                // Update the table with the filtered data
+                updateTable(filteredStudents);
+            },
+            error: function (error) {
+                console.error('Error fetching student data:', error);
+            }
+            });
+        }
+
+
+    </script>
+</body>
+</html>
