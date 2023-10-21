@@ -36,6 +36,32 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use("/api/products", products_routes);
 
+
+//Headers
+// In the generate PDF section, continue to use the generatePDFTable function:
+const headers = [
+  "StudentID",
+  "StudentName",
+  "FirstName",
+  "MidName",
+  "LastName",
+  "Semester",
+  "CompanyName",
+  "CompanyAddress",
+  "Counsellor_InternalGuide",
+  "HRphonenumber",
+  "Duration",
+  "StartDate",
+  "EndDate",
+  "TypeofInternship",
+  "ProjectTitle",
+  "ToolsandTechnology",
+];
+
+
+
+
+
 // Routes
 
 // Home Route
@@ -265,71 +291,214 @@ async function retrieveData() {
   }
 }
 
-
-
-// Your data retrieval function for analytics
-app.get("/analytics", (req, res) => {
-  res.render("analytics");
+// Define a route for rendering the student list
+app.get('/analytics', async (req, res) => {
+  const students = await Product.find().exec();
+  res.render('analytics', { students });
 });
 
-async function retrieveData() {
-  try {
-    const data = await Product.find().exec();
-    return data;
-  } catch (error) {
-    console.error('Error retrieving data:', error);
-    throw error;
-  }
-}
+// ...
 
-// Updated Express.js route to process the form data
+// // Define a route for generating reports (Excel and PDF)
+// app.post('/generate-report', async (req, res) => {
+//   const format = req.body.format;
+
+//   // Fetch student data from the database
+//   const students = await Product.find().exec();
+
+//   if (format === 'excel') {
+//     // Generate and send an Excel report
+//     const workbook = new ExcelJS.Workbook();
+//     const worksheet = workbook.addWorksheet('Student Report');
+
+//     // Define headers based on your MongoDB schema
+//     const headers = Object.keys(Product.schema.paths)
+//       .filter((field) => field !== '_id' && field !== '__v') // Exclude MongoDB-specific fields
+//       .map((field) => field.charAt(0).toUpperCase() + field.slice(1)); // Capitalize the first letter
+//     worksheet.addRow(headers);
+
+//     // Add student data
+//     students.forEach((student) => {
+//       // Convert the student object into an array of values
+//       const rowData = headers.map((header) => student[header] || 'Not Provided');
+//       worksheet.addRow(rowData);
+//     });
+
+//     res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+//     res.setHeader('Content-Disposition', 'attachment; filename=student-report.xlsx');
+//     await workbook.xlsx.write(res);
+//     res.end();
+//   } else if (format === 'pdf') {
+//     // Generate and send a PDF report
+//     const doc = new PDFDocument();
+//     res.setHeader('Content-Type', 'application/pdf');
+//     res.setHeader('Content-Disposition', 'attachment; filename=student-report.pdf');
+//     doc.pipe(res);
+
+//     doc.fontSize(20).text('Student Report', { align: 'center' });
+
+//     // Define headers based on your MongoDB schema
+//     const headers = Object.keys(Product.schema.paths)
+//       .filter((field) => field !== '_id' && field !== '__v') // Exclude MongoDB-specific fields
+//       .map((field) => field.charAt(0).toUpperCase() + field.slice(1)); // Capitalize the first letter
+
+//     // Generate a table with all student details
+//     const table = {
+//       headers,
+//       rows: students.map((student) =>
+//         headers.map((header) => student[header] || 'Not Provided')
+//       ),
+//     };
+//     generatePDFTable(doc, table);
+
+//     doc.end();
+//   } else {
+//     res.status(400).send('Invalid report format');
+//   }
+// });
+
+// // ...
+
+// function generatePDFTable(doc, table) {
+//   const tableHeaders = table.headers;
+//   const tableRows = table.rows;
+//   const columnWidths = tableHeaders.map((header) => header.length * 8);
+
+//   const cellPadding = 10;
+//   const initialX = 50;
+//   const initialY = 100;
+//   let currentX = initialX;
+//   let currentY = initialY;
+
+//   // Draw table headers
+//   doc.font('Helvetica-Bold');
+//   tableHeaders.forEach((header, i) => {
+//     doc.rect(currentX, currentY, columnWidths[i], cellPadding).fillAndStroke('#eee', '#000');
+//     doc.text(header, currentX + cellPadding / 2, currentY + cellPadding / 2);
+//     currentX += columnWidths[i];
+//   });
+
+//   doc.moveDown();
+
+//   // Draw table rows
+//   doc.font('Helvetica');
+//   tableRows.forEach((row) => {
+//     currentX = initialX;
+//     currentY += cellPadding;
+
+//     row.forEach((cell, i) => {
+//       doc.rect(currentX, currentY, columnWidths[i], cellPadding).fillAndStroke('#fff', '#000');
+//       doc.text(cell, currentX + cellPadding / 2, currentY + cellPadding / 2);
+//       currentX += columnWidths[i];
+//     });
+
+//     currentY += cellPadding;
+//   });
+// }
+// Define a route for generating reports (Excel and PDF)
 app.post('/generate-report', async (req, res) => {
-  const { selectedColumns, format } = req.body;
+  const format = req.body.format;
 
-  if (!selectedColumns || selectedColumns.length === 0) {
-    return res.status(400).send('Please select at least one column.');
-  }
+  // Fetch student data from the database
+  const students = await Product.find().exec();
 
-  const Product = mongoose.model('Product');
-  const data = await Product.find().sort({ StudentID: -1 });
+  if (format === 'excel') {
+    // Generate and send an Excel report
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Student Report');
 
-  if (format && format.toLowerCase() === 'excel') {
-    try {
-      const workbook = new ExcelJS.Workbook();
-      const worksheet = workbook.addWorksheet('Report');
+    // Define headers based on your MongoDB schema
+    const headers = Object.keys(Product.schema.paths)
+      .filter((field) => field !== '_id' && field !== '__v') // Exclude MongoDB-specific fields
+      .map((field) => field.charAt(0).toUpperCase() + field.slice(1)); // Capitalize the first letter
+    worksheet.addRow(headers);
 
-      // Create a mapping for user-friendly column names
-      const columnMap = {
-        StudentID: 'Student ID',
-        StudentName: 'Student Name',
-        CompanyName: 'Company Name',
-        // Add more columns as needed
-      };
+    // Add student data
+    students.forEach((student) => {
+      // Convert the student object into an array of values
+      const rowData = headers.map((header) => student[header] || 'Not Provided');
+      worksheet.addRow(rowData);
+    });
 
-      // Add headers to the worksheet based on the selected columns
-      const headers = selectedColumns.map(col => columnMap[col]);
-      worksheet.addRow(headers);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+    res.setHeader('Content-Disposition', 'attachment; filename=student-report.xlsx');
+    await workbook.xlsx.write(res);
+    res.redirect('/analytics');
+    res.end();
+  } else if (format === 'pdf') {
+    // Generate and send a PDF report
+    const doc = new PDFDocument();
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=student-report.pdf');
+    doc.pipe(res);
 
-      // Populate the data for the selected columns
-      data.forEach(row => {
-        const rowData = selectedColumns.map(col => row[col]);
-        worksheet.addRow(rowData);
-      });
+    doc.fontSize(20).text('Student Report', { align: 'center' });
 
-      res.setHeader('Content-Type', 'application/vnd.openxmlformats');
-      res.setHeader('Content-Disposition', 'attachment; filename=report.xlsx');
+    // Define headers based on your MongoDB schema
+    const headers = Object.keys(Product.schema.paths)
+      .filter((field) => field !== '_id' && field !== '__v') // Exclude MongoDB-specific fields
+      .map((field) => field.charAt(0).toUpperCase() + field.slice(1)); // Capitalize the first letter
 
-      await workbook.xlsx.write(res);
-      res.end();
-    } catch (error) {
-      console.error('Error generating Excel report:', error);
-      res.status(500).send('Internal Server Error');
-    }
+    // Generate a table with all student details
+    const table = {
+      headers,
+      rows: students.map((student) =>
+        headers.map((header) => student[header] || 'Not Provided')
+      ),
+    };
+    generatePDFTable(doc, table);
+
+    doc.end();
   } else {
     res.status(400).send('Invalid report format');
+
   }
 });
 
+// ...
+
+function generatePDFTable(doc, table) {
+  const tableHeaders = table.headers;
+  const tableRows = table.rows;
+  const columnWidths = tableHeaders.map((header) => header.length * 8);
+
+  const cellPadding = 10;
+  const initialX = 50;
+  const initialY = 100;
+  let currentX = initialX;
+  let currentY = initialY;
+
+  // Draw table headers
+  doc.font('Helvetica-Bold');
+  tableHeaders.forEach((header, i) => {
+    doc.rect(currentX, currentY, columnWidths[i], cellPadding).fillAndStroke('#eee', '#000');
+    doc.text(header, currentX + cellPadding / 2, currentY + cellPadding / 2);
+    currentX += columnWidths[i];
+  });
+
+  doc.moveDown();
+
+  // Draw table rows
+  doc.font('Helvetica');
+  tableRows.forEach((row) => {
+    currentX = initialX;
+    currentY += cellPadding;
+
+    row.forEach((cell, i) => {
+      doc.rect(currentX, currentY, columnWidths[i], cellPadding).fillAndStroke('#fff', '#000');
+      doc.text(cell, currentX + cellPadding / 2, currentY + cellPadding / 2);
+      currentX += columnWidths[i];
+    });
+
+    currentY += cellPadding;
+  });
+}
+// ...
+
+// In the generate PDF section, continue to use the generatePDFTable function:
+
+
+// ...
 
 
 

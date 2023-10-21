@@ -1,31 +1,67 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Response Report Generator</title>
     <link rel="icon" href="../public/img/image-2.png" type="image">
-    <link rel="stylesheet" type="text/css" href="../public/css/style7.css">
+    <title>Analytics | Report</title>
+    <link rel="stylesheet" type="text/css" href="../public/css/style4.css">
+    <script>
+        function filterTable() {
+            const table = document.getElementById('student-table');
+            const rows = Array.from(table.querySelectorAll('tr'));
+            const select = document.getElementById('filter-select');
+            const selectedOption = select.options[select.selectedIndex].value;
+
+            rows.shift(); // Remove the header row from filtering
+
+            rows.forEach((row) => {
+                const statusCell = row.querySelector('td:last-child').textContent;
+                if (selectedOption === 'all' || statusCell.toLowerCase() === selectedOption) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
 </head>
 <body>
-    <form action="/generate-report" method="post">
-        <h1>Response Report Generator</h1>
-        <p>Select the columns you want in the report:</p>
-        <div>
-            <label>Select Columns:</label>
-            <select name="selectedColumns[]" multiple>
-                <option value="StudentName">Student Name</option>
-                <option value="StudentID">StudentID</option>
-                <option value="CompanyName">Company Name</option>
-                <!-- Add more options for other columns as needed -->
+    <div class="download-section">
+        <form action="/generate-report" method="post">
+            <label>Generate Report:</label>
+            <select name="format">
+                <option value="excel">Excel (XLSX)</option>
+                <option value="pdf">PDF</option>
             </select>
-        </div>
-        <div>
-            <p>Report Format:</p>
-            <input type="radio" id="excel" name="format" value="excel" checked>
-            <label for="excel">Excel (XLSX)</label><br>
-            <input type="radio" id="pdf" name="format" value="pdf">
-            <label for="pdf">PDF</label>
-        </div>
-        <button type="submit">Generate Report</button>
-    </form>
+            <button type="submit">Download</button>
+        </form>
+    </div>
+    <div class="content">
+        <h1 align="center">Students List</h1>
+        <label for="filter-select">Filter by Status:</label>
+        <select id="filter-select" onchange="filterTable()">
+            <option value="all">All</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="Pending">Pending</option>
+        </select>
+        <table id="student-table">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>View</th>
+                <th>Status</th>
+            </tr>
+            <% students.forEach((student) => { %>
+                <tr>
+                    <td><%= student.StudentID %></td>
+                    <td><%= student.StudentName %></td>
+                    <td>
+                        <a href="/viewdetails?StudentID=<%= student.StudentID %>">View</a>
+                    </td>
+                    <td id="status-<%= student.StudentID %>"><%= student.Status %></td>
+                </tr>
+            <% }); %>
+        </table>
+    </div>
 </body>
 </html>

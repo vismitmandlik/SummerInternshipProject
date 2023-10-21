@@ -71,3 +71,45 @@ td:nth-child(4):contains("Pending") {
 td:nth-child(4):contains("Approved") {
     color: green;
 }
+
+/* FILEPATH: /D:/Sgp Project 5th sem/Internship Management Portal/css/style4.css */
+
+/* Style for the download button section (top right corner) */
+.download-section {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    background: #16629E;
+}
+
+.download-section form {
+    display: flex;
+    align-items: center;
+}
+
+.download-section label {
+    color: white;
+    margin-right: 10px;
+}
+
+.download-section select {
+    margin-right: 10px;
+}
+
+.download-section button {
+    background-color: #16629E;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* Style for the table */
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 60px; /* Adjust the margin to create space for the download button */
+}
+
+/* ... (rest of your CSS styles) */
