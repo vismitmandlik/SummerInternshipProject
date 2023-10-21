@@ -9,6 +9,7 @@ const Product = require("./models/product");
 const ExcelJS = require('exceljs');
 const PDFDocument = require('pdfkit');
 const bodyParser = require('body-parser');
+const fs = require('fs'); 
 
 // Set up EJS as the template engine
 app.set("view engine", "ejs");
@@ -220,28 +221,26 @@ app.get("/viewdetails", async (req, res) => {
     }
 });
 
-app.get("/analytics", (req, res) => {
-  res.render("analytics");
-});
 // Update the student's status by StudentID
 app.post("/update-status", async (req, res) => {
-    const { studentID, newStatus } = req.body;
-
-    try {
-        const Product = mongoose.model("Product");
-
-        // Update the status in the database
-        await Product.updateOne({ StudentID: studentID }, { Status: newStatus });
-
-        // Respond with a success message (you can customize this)
-        res.redirect('/manage-requests');
-    } catch (error) {
-        console.error("Error updating status:", error);
-        res.status(500).send("Internal Server Error");
-    }
+  const { studentID, newStatus } = req.body;
+  
+  try {
+    const Product = mongoose.model("Product");
+    
+    // Update the status in the database
+    await Product.updateOne({ StudentID: studentID }, { Status: newStatus });
+    
+    // Respond with a success message (you can customize this)
+    res.redirect('/manage-requests');
+  } catch (error) {
+    console.error("Error updating status:", error);
+    res.status(500).send("Internal Server Error");
+  }
 });
 
 // Your data retrieval function for analytics
+
 async function fetchData(selectedColumns) {
 
   const Product = mongoose.model("Product");
@@ -255,35 +254,82 @@ async function fetchData(selectedColumns) {
   return filteredData;
 }
 
-app.post('/generate-report', (req, res) => {
-  const { selectedColumns, reportFormat } = req.body;
-  const data = fetchData(selectedColumns);
 
-  if (reportFormat === 'excel') {
-      // Generate an Excel report
+async function retrieveData() {
+  try {
+    const data = await Product.find().exec();
+    return data;
+  } catch (error) {
+    console.error('Error retrieving data:', error);
+    throw error;
+  }
+}
+
+
+
+// Your data retrieval function for analytics
+app.get("/analytics", (req, res) => {
+  res.render("analytics");
+});
+
+async function retrieveData() {
+  try {
+    const data = await Product.find().exec();
+    return data;
+  } catch (error) {
+    console.error('Error retrieving data:', error);
+    throw error;
+  }
+}
+
+// Updated Express.js route to process the form data
+app.post('/generate-report', async (req, res) => {
+  const { selectedColumns, format } = req.body;
+
+  if (!selectedColumns || selectedColumns.length === 0) {
+    return res.status(400).send('Please select at least one column.');
+  }
+
+  const Product = mongoose.model('Product');
+  const data = await Product.find().sort({ StudentID: -1 });
+
+  if (format && format.toLowerCase() === 'excel') {
+    try {
       const workbook = new ExcelJS.Workbook();
       const worksheet = workbook.addWorksheet('Report');
-      data.forEach(row => worksheet.addRow(row));
+
+      // Create a mapping for user-friendly column names
+      const columnMap = {
+        StudentID: 'Student ID',
+        StudentName: 'Student Name',
+        CompanyName: 'Company Name',
+        // Add more columns as needed
+      };
+
+      // Add headers to the worksheet based on the selected columns
+      const headers = selectedColumns.map(col => columnMap[col]);
+      worksheet.addRow(headers);
+
+      // Populate the data for the selected columns
+      data.forEach(row => {
+        const rowData = selectedColumns.map(col => row[col]);
+        worksheet.addRow(rowData);
+      });
 
       res.setHeader('Content-Type', 'application/vnd.openxmlformats');
       res.setHeader('Content-Disposition', 'attachment; filename=report.xlsx');
-      workbook.xlsx.write(res).then(() => res.end());
-  } else if (reportFormat === 'pdf') {
-      // Generate a PDF report
-      const doc = new PDFDocument();
-      const pdfFilePath = 'report.pdf';
 
-      doc.pipe(fs.createWriteStream(pdfFilePath));
-      data.forEach(row => {
-          doc.text(row.join('\t'));
-      });
-      doc.end();
-
-      res.download(pdfFilePath, 'report.pdf');
+      await workbook.xlsx.write(res);
+      res.end();
+    } catch (error) {
+      console.error('Error generating Excel report:', error);
+      res.status(500).send('Internal Server Error');
+    }
   } else {
-      res.status(400).send('Invalid report format');
+    res.status(400).send('Invalid report format');
   }
 });
+
 
 
 

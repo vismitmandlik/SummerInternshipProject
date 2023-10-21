@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Response Report Generator</title>
+    <link rel="icon" href="../public/img/image-2.png" type="image">
     <link rel="stylesheet" type="text/css" href="../public/css/style7.css">
 </head>
 <body>
@@ -10,10 +11,10 @@
         <p>Select the columns you want in the report:</p>
         <div>
             <label>Select Columns:</label>
-            <select name="selectedColumns" multiple>
-                <option value="name">Name</option>
-                <option value="email">Email</option>
-                <option value="responseDate">Response Date</option>
+            <select name="selectedColumns[]" multiple>
+                <option value="StudentName">Student Name</option>
+                <option value="StudentID">StudentID</option>
+                <option value="CompanyName">Company Name</option>
                 <!-- Add more options for other columns as needed -->
             </select>
         </div>
