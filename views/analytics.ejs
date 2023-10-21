@@ -5,21 +5,34 @@
     <title>Analytics | Report</title>
     <link rel="stylesheet" type="text/css" href="../public/css/style4.css">
     <script>
+        function customSort(a, b) {
+            const studentIdA = a.getAttribute('data-studentid');
+            const studentIdB = b.getAttribute('data-studentid');
+            return studentIdA.localeCompare(studentIdB);
+        }
+
         function filterTable() {
             const table = document.getElementById('student-table');
             const rows = Array.from(table.querySelectorAll('tr'));
             const select = document.getElementById('filter-select');
-            const selectedOption = select.options[select.selectedIndex].value;
-
-            rows.shift(); // Remove the header row from filtering
+            const selectedOption = select.options[select.selectedIndex].value.toLowerCase();
 
             rows.forEach((row) => {
-                const statusCell = row.querySelector('td:last-child').textContent;
-                if (selectedOption === 'all' || statusCell.toLowerCase() === selectedOption) {
+                const statusCell = row.querySelector('td:last-child').textContent.toLowerCase();
+                if (selectedOption === 'all' || statusCell === selectedOption) {
                     row.style.display = 'table-row';
                 } else {
                     row.style.display = 'none';
                 }
+            });
+
+            // Sorting the rows by custom order
+            rows.sort(customSort);
+            
+            // Rebuild the table with sorted rows
+            const tbody = table.querySelector('tbody');
+            rows.forEach((row) => {
+                tbody.appendChild(row);
             });
         }
     </script>
@@ -42,7 +55,7 @@
             <option value="all">All</option>
             <option value="approved">Approved</option>
             <option value="rejected">Rejected</option>
-            <option value="Pending">Pending</option>
+            <option value="pending">Pending</option>
         </select>
         <table id="student-table">
             <tr>
@@ -51,16 +64,18 @@
                 <th>View</th>
                 <th>Status</th>
             </tr>
-            <% students.forEach((student) => { %>
-                <tr>
-                    <td><%= student.StudentID %></td>
-                    <td><%= student.StudentName %></td>
-                    <td>
-                        <a href="/viewdetails?StudentID=<%= student.StudentID %>">View</a>
-                    </td>
-                    <td id="status-<%= student.StudentID %>"><%= student.Status %></td>
-                </tr>
-            <% }); %>
+            <tbody>
+                <% students.forEach((student) => { %>
+                    <tr data-studentid="<%= student.StudentID %>">
+                        <td><%= student.StudentID %></td>
+                        <td><%= student.StudentName %></td>
+                        <td>
+                            <a href="/viewdetails?StudentID=<%= student.StudentID %>">View</a>
+                        </td>
+                        <td id="status-<%= student.StudentID %>"><%= student.Status %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
         </table>
     </div>
 </body>

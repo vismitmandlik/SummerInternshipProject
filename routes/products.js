@@ -2,15 +2,6 @@ const express = require("express");
 const router = express.Router();
 const {getAllProducts,getAllProductsTesting,createResponse} = require("../controllers/products")
 
-// router.route("/").get(getAllProducts);
-// Render the admin.ejs template for the home route
-router.get("/", (req, res) => {
-    res.render("admin");
-  });
-
-
-router.route("/testing").get(getAllProductsTesting);
-router.route("/create").get(createResponse);
 
 // Route to handle form submission and create a new product
 router.post("/create", async (req, res) => {
@@ -66,6 +57,7 @@ router.get('/search-student', (req, res) => {
   const student = students.find((s) => s.StudentID === studentID);
   res.json(student);
 });
+
 // Define the authentication route
 router.post("/login", async (req, res) => {
     try {
@@ -89,5 +81,6 @@ router.post("/login", async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
 
 module.exports = router;
