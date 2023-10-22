@@ -11,6 +11,7 @@ const ExcelJS = require('exceljs');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const router = require("./routes/products")
+const puppeteer = require("puppeteer");
 
 // Set up EJS as the template engine
 app.set("view engine", "ejs");
@@ -64,38 +65,43 @@ const headers = [
 
 
 // For NOC generation
-app.get('/download-noc', async (req, res) => {
-    try {
-        const StudentID = req.query.StudentID;
-
-        // Fetch the student's data by StudentID from the database
-        const student = await Product.findOne({ StudentID });
-
-        if (!student) {
-            return res.status(404).send('Student not found');
-        }
-
-        // Render the EJS template with student data and send it as a PDF
-        res.render('noc', { student }, (err, html) => {
-            if (err) {
-                console.error(err);
-                res.status(500).send('Internal Server Error');
-            } else {
-                const doc = new PDFDocument();
-                res.setHeader('Content-Type', 'application/pdf');
-                res.setHeader('Content-Disposition', `attachment; filename=NOC_${StudentID}.pdf`);
-                doc.pipe(res);
-                doc.text(html);
-                doc.end();
-            }
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal Server Error');
-    }
-});
-
-
+// Define a route to render your EJS template
+app.get("/render", async (req, res) => {
+    // Replace 'template.ejs' with the path to your EJS template
+    const templatePath = "/views/noc.ejs";
+    const data = await Product.findOne().lean().sort({
+        StudentID: -1
+    });;
+  
+    ejs.renderFile(templatePath, data, {}, (err, html) => {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Internal Server Error");
+      } else {
+        // Render the HTML
+        res.send(html);
+      }
+    });
+  });
+  
+  // Define a route to capture a PDF of the rendered content using Puppeteer
+  app.get("/capture-pdf", async (req, res) => {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+  
+    // Visit the route that renders the EJS template
+    await page.goto(`http://localhost:${port}/render`, { waitUntil: "domcontentloaded" });
+  
+    // Capture a PDF of the page
+    const pdfBuffer = await page.pdf();
+  
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader("Content-Disposition", "attachment; filename=NOC.pdf");
+    res.send(pdfBuffer);
+  
+    await browser.close();
+  });
+  
 
 
 
