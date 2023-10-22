@@ -59,7 +59,7 @@ const productSchema = new mongoose.Schema({
     },
     Status: { 
         type: String,
-        default: "Pending", // Default value of "Not Provided"
+        default: "ending", // Default value of "Not Provided"
     },
     Semester: { 
         type: String,
@@ -70,11 +70,11 @@ const productSchema = new mongoose.Schema({
         default: "Not Provided", // Default value of "Not Provided"
     },
     StartDate: { 
-        type: Date,
+        type: String,
         default: "Not Provided", // Default value of "Not Provided"
     },
     EndDate: { 
-        type: Date,
+        type: String,
         default: "Not Provided", // Default value of "Not Provided"
     },
 

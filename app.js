@@ -3,13 +3,14 @@ const express = require("express");
 const app = express();
 const connectDB = require("./db/connect");
 const mongoose = require("mongoose");
+const PDFDocument = require('pdfkit');
 const ejs = require("ejs");
 const path = require("path");
 const Product = require("./models/product");
 const ExcelJS = require('exceljs');
-const PDFDocument = require('pdfkit');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const router = require("./routes/products")
 
 // Set up EJS as the template engine
 app.set("view engine", "ejs");
@@ -26,7 +27,7 @@ db.on('error', () => console.log("Error in Connecting to Database"));
 db.once('open', () => console.log("Connected to Database"))
 
 // PORT
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT || 9000;
 
 const products_routes = require("./routes/products");
 
@@ -38,7 +39,6 @@ app.use(express.urlencoded({
     extended: true
 }));
 app.use(express.static('public'));
-// app.use("/api/products", products_routes);
 
 
 //Headers
@@ -63,27 +63,47 @@ const headers = [
 ];
 
 
+// For NOC generation
+app.get('/download-noc', async (req, res) => {
+    try {
+        const StudentID = req.query.StudentID;
+
+        // Fetch the student's data by StudentID from the database
+        const student = await Product.findOne({ StudentID });
+
+        if (!student) {
+            return res.status(404).send('Student not found');
+        }
+
+        // Render the EJS template with student data and send it as a PDF
+        res.render('noc', { student }, (err, html) => {
+            if (err) {
+                console.error(err);
+                res.status(500).send('Internal Server Error');
+            } else {
+                const doc = new PDFDocument();
+                res.setHeader('Content-Type', 'application/pdf');
+                res.setHeader('Content-Disposition', `attachment; filename=NOC_${StudentID}.pdf`);
+                doc.pipe(res);
+                doc.text(html);
+                doc.end();
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
+
+
 
 
 // Routes
 
-// Home Route
-app.get("/", async (req, res) => {
-    try {
-        const Product = mongoose.model("Product");
-        const data = await Product.find().sort({
-            StudentID: -1
-        }); // Sort by StudentID
-
-        // Render the EJS template with the data
-        res.render("login", {
-            data
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error");
-    }
-});
+// // Home Route
+app.use("/",router)
 
 
 
@@ -202,12 +222,19 @@ app.get("/manage-requests", async (req, res) => {
 
 // Define the route for the confirmation for
 app.get("/form", (req, res) => {
-    res.render("confirmation-form", {
-        data: {}
-    });
+    try{
+        res.render("confirmation-form", {
+            data: {}
+        });
+    }
+    catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+
 });
 
-app.post("/form", (req, res) => {
+app.post("/form", async (req, res) => {
     try {
         var StudentID = req.body.StudentID; // Corrected property name
         var StudentName = req.body.StudentName
@@ -225,6 +252,7 @@ app.post("/form", (req, res) => {
         var TypeofInternship = req.body.TypeofInternship; // Corrected property name
         var ProjectTitle = req.body.ProjectTitle;
         var ToolsandTechnology = req.body.ToolsandTechnology;
+        var Status = req.body.Status
 
         var data = {
             "StudentID": StudentID, // Corrected property na
@@ -243,17 +271,37 @@ app.post("/form", (req, res) => {
             "TypeofInternship": TypeofInternship, // Corrected property name
             "ProjectTitle": ProjectTitle,
             "ToolsandTechnology": ToolsandTechnology,
+            "Status": Status,
         };
 
-        // Insert the data into the database
-        db.collection('products').insertOne(data, (err, collection) => {
-            if (err) {
-                throw err;
-            }
+        const existingStudent = await Product.findOne({ StudentID: data.StudentID });
+        if (existingStudent) {
+            console.log("A student with the same StudentID already exists.");
+            existingStudent.StudentID = req.body.StudentID; // Corrected property name
+            existingStudent.StudentName = req.body.StudentName
+            existingStudent.FirstName = req.body.FirstName
+            existingStudent.MidName = req.body.MidName;
+            existingStudent.LastName = req.body.LastName;
+            existingStudent.Semester = req.body.semester;
+            existingStudent.CompanyName = req.body.CompanyName; // Corrected property name
+            existingStudent.CompanyAddress = req.body.CompanyAddress;
+            existingStudent.Counsellor_InternalGuide = req.body.Counsellor_InternalGuide;
+            existingStudent.HRphonenumber = req.body.HRphonenumber; // Corrected property name
+            existingStudent.Duration = req.body.duration;
+            existingStudent.StartDate = req.body.startDate;
+            existingStudent.EndDate = req.body.endDate;
+            existingStudent.TypeofInternship = req.body.TypeofInternship; // Corrected property name
+            existingStudent.ProjectTitle = req.body.ProjectTitle;
+            existingStudent.ToolsandTechnology = req.body.ToolsandTechnology;
+            existingStudent.Status = req.body.Status
+
+            await existingStudent.save();
+            console.log("Student information updated successfully.");
+        } else {
+            // Insert the new data
+            await db.collection('products').insertOne(data);
             console.log("Record Inserted Successfully");
-        });
-
-
+        }
         return res.redirect('/student-dashboard');
     } catch (error) {
         console.error(error);
@@ -456,6 +504,11 @@ function generatePDFTable(doc, table) {
 
 
 // ...
+// Custom error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err);
+    res.status(500).render('error', { message: 'An error occurred' });
+  });
 
 
 
