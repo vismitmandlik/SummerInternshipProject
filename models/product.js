@@ -1,4 +1,22 @@
 const mongoose = require("mongoose");
+const passportLocalMongoose = require("passport-local-mongoose");
+
+// Define the user schema
+const userSchema = new mongoose.Schema({
+    username: String,
+    password: String, // This will be used for storing passwords
+    role: {
+        type: String,
+        required: true,
+        default: "student", // Default role is "student"
+        enum: ["admin", "faculty", "student"], // Specify the allowed roles
+    },
+});
+
+userSchema.plugin(passportLocalMongoose);
+
+const User = mongoose.model('User', userSchema);
+
 
 const productSchema = new mongoose.Schema({
     StudentID: {
@@ -77,8 +95,17 @@ const productSchema = new mongoose.Schema({
         type: String,
         default: "Not Provided", // Default value of "Not Provided"
     },
+    // Link the product schema with the user schema
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+    },
 
 });
+// You may also need to add Passport.js and Passport-Local-Mongoose for authentication.
+userSchema.plugin(passportLocalMongoose);
 
-
-module.exports = mongoose.model('Product', productSchema);
+module.exports = {
+    Product: mongoose.model('Product', productSchema),
+    User: User,
+};

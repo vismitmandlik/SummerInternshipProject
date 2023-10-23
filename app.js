@@ -12,6 +12,10 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const router = require("./routes/products")
 const puppeteer = require("puppeteer");
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const expressSession = require('express-session');
+require('events').EventEmitter.defaultMaxListeners = 20; // Increase the limit as needed
 
 // Set up EJS as the template engine
 app.set("view engine", "ejs");
@@ -21,6 +25,11 @@ app.use('/public/css', express.static(__dirname + '/public/css'));
 app.use('/public/scripts', express.static(__dirname + '/public/scripts'));
 app.use('/public/img', express.static(__dirname + '/public/img'));
 app.set('views', path.join(__dirname, 'views'));
+
+app.use(expressSession({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 var db = mongoose.connection;
 
@@ -120,6 +129,58 @@ app.get("/capture-pdf/:StudentID", async (req, res) => {
 
 
 // Routes
+
+
+// Authentication-------------------------------------------------------------------------->
+
+
+app.get("/register-faculty", async (req, res) => {
+    try {
+        const Product = mongoose.model("Product");
+        const data = await Product.findOne().lean().sort({
+            StudentID: -1
+        });; // Fetch data from the database
+        if (true) {
+        res.render("register-faculty", {
+            data
+        }); }
+        else {
+            // If not authenticated or not an admin, send an "Access denied" response
+            res.redirect("admin-dashboard");// Create an EJS file for confirmation
+    }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error at .get/register-faculty");
+    }
+});
+
+
+// Register Faculty Route (accessible by admin)
+app.post("/register-faculty", async (req, res) => {
+    try {
+        const { username, role, password } = req.body;
+
+        // Check if the current user has admin privileges to access this route
+        if (true) {
+            // Create a new faculty user
+            const faculty = new User({ username, role: "faculty", password });
+            
+            // Save the faculty user to the database
+            await faculty.save();
+
+            res.redirect("/admin-dashboard"); // Redirect to the admin dashboard after successful registration
+        } else {
+            res.status(403).send("Access denied"); // Unauthorized access
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+
+
+
+
 
 // // Home Route
 app.use("/",router)

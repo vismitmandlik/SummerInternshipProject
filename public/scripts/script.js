@@ -13,6 +13,9 @@ function Approval() {
 function approval_form() {
     window.location.href = "/approval-form"; // Change the URL to the route for approved.ejs
 }
+function RegisterFaculty() {
+    window.location.href = "/register-faculty"; // Change the URL to the route for approved.ejs
+}
 
 // Define the function to fetch student data
 function fetchStudentData(callback) {
