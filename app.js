@@ -106,7 +106,7 @@ app.get("/capture-pdf/:StudentID", async (req, res) => {
         const pdfBuffer = await page.pdf();
 
         res.setHeader("Content-Type", "application/pdf");
-        res.setHeader("Content-Disposition", "attachment; filename=NOC.pdf");
+        res.setHeader("Content-Disposition", `attachment; filename=NOC_${StudentID}.pdf`);
         res.send(pdfBuffer);
 
         await browser.close();
@@ -231,6 +231,41 @@ app.get("/manage-requests", async (req, res) => {
             currentPage,
             totalPages
         });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
+});
+// for search bar
+app.get("/search-students", async (req, res) => {
+    try {
+        const { query } = req.query; // Get the search query from the query parameters
+
+        // Check if a search query is provided
+        if (query) {
+            // Search for students that match the query in the entire database
+            const students = await Product.find({
+                $or: [
+                    { StudentID: { $regex: query, $options: 'i' } }, // Match StudentID (case-insensitive)
+                    { StudentName: { $regex: query, $options: 'i' } }, // Match StudentName (case-insensitive)
+                    // Add more fields to search if needed
+                ]
+            });
+        const studentsPerPage = 10; // Set the number of students per page
+        const currentPage = parseInt(req.query.page) || 1; // Get the current page from the query parameters, default to page 1
+
+        const totalStudents = await Product.countDocuments();
+        const totalPages = Math.ceil(totalStudents / studentsPerPage);
+
+            return res.render("manage-requests", {
+                students,
+                currentPage,
+                totalPages
+            });
+        }
+
+        // If no search query is provided, redirect back to the paginated page
+        res.redirect("/manage-requests");
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");
@@ -438,18 +473,33 @@ app.post('/generate-report', async (req, res) => {
             worksheet.addRow(rowData);
         });
 
+        // Generate a filename with the current date
+        const currentDate = new Date().toLocaleDateString().replace(/\//g, '-'); // Format date as "MM-DD-YYYY"
+        const filename = `StudentsReport-${currentDate}.xlsx`;
+
         res.setHeader('Content-Type', 'application/vnd.openxmlformats');
-        res.setHeader('Content-Disposition', 'attachment; filename=student-report.xlsx');
+        res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
         await workbook.xlsx.write(res);
 
         // End the response to prevent further headers from being set
         res.end();
     } else if (format === 'pdf') {
         // Generate and send a PDF report
+
+        
+
+
         const doc = new PDFDocument();
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'attachment; filename=student-report.pdf');
+
+
+        // Generate a filename with the current date
+        const currentDate = new Date().toLocaleDateString().replace(/\//g, '-'); // Format date as "MM-DD-YYYY"
+        const filename = `StudentsReport-${currentDate}.pdf`;
+
+        res.setHeader('Content-Disposition',  `attachment; filename=${filename}`);
         doc.pipe(res);
+
 
         doc.fontSize(20).text('Student Report', {
             align: 'center'

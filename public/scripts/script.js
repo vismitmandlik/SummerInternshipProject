@@ -29,22 +29,3 @@ function fetchStudentData(callback) {
     });
 }
 
-// Define the function to search for students
-function searchStudent() {
-    // Get the search query from the input field
-    const searchQuery = document.getElementById("searchStudent").value;
-
-    // Fetch student data and then filter it based on the search query
-    fetchStudentData(function (students) {
-        const filteredStudents = students.filter(student => {
-            return student.StudentID.includes(searchQuery);
-        });
-
-        // Update the table with the filtered data
-        currentPage = 1; // Reset to the first page
-        totalPages = Math.ceil(filteredStudents.length / entriesPerPage);
-
-        // Update the table with the filtered data
-        updateTable(filteredStudents);
-    });
-}

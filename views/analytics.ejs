@@ -17,15 +17,19 @@
             const select = document.getElementById('filter-select');
             const selectedOption = select.options[select.selectedIndex].value.toLowerCase();
 
+            console.log('Selected Option:', selectedOption);
+
             rows.forEach((row) => {
-                const statusCell = row.querySelector('td:last-child').textContent.toLowerCase();
-                if (selectedOption === 'all' || statusCell === selectedOption) {
+            const statusCell = row.querySelector('td:last-child');
+            if (statusCell) {
+                const statusText = statusCell.textContent.toLowerCase();
+                if (selectedOption === 'all' || statusText === selectedOption) {
                     row.style.display = 'table-row';
                 } else {
                     row.style.display = 'none';
                 }
-            });
-
+            }
+        });
             // Sorting the rows by custom order
             rows.sort(customSort);
             
@@ -58,12 +62,14 @@
             <option value="pending">Pending</option>
         </select>
         <table id="student-table">
+            <thead>
             <tr>
                 <th>ID</th>
                 <th>Name</th>
                 <th>View</th>
                 <th>Status</th>
             </tr>
+            </thead>
             <tbody>
                 <% students.forEach((student) => { %>
                     <tr data-studentid="<%= student.StudentID %>">
