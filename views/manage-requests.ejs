@@ -39,7 +39,7 @@
                 <td id="status-<%= student.StudentID %>"><%= student.Status %></td>
                 <td>
                     <% if (student.Status === 'Approved') { %>
-                        <a href="/capture-pdf?StudentID=<%= student.StudentID %>">Download NOC</a>
+                        <a href="/capture-pdf/<%= student.StudentID %>">Download NOC</a>
                     <% } else { %>
                         <!-- Display a message or placeholder when status is not Approved -->
                         Not Applicable

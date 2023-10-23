@@ -66,42 +66,55 @@ const headers = [
 
 // For NOC generation
 // Define a route to render your EJS template
-app.get("/render", async (req, res) => {
-    // Replace 'template.ejs' with the path to your EJS template
-    const templatePath = "/views/noc.ejs";
-    const data = await Product.findOne().lean().sort({
-        StudentID: -1
-    });;
+app.get("/render/:StudentID", async (req, res) => {
+    try {
+        // Get the StudentID parameter from the URL
+        const { StudentID } = req.params;
+
+        // Fetch the latest student from the database
+        const student = await Product.findOne({ StudentID });
+
+        // Check if a student was found
+        if (!student) {
+            return res.status(404).send("Student data not found for the specified StudentID");
+        }
+
+        // Render the EJS template with the student data
+        res.render("noc", { student }); // Assuming your EJS file is named "noc.ejs"
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error in /render");
+    }
+});
   
-    ejs.renderFile(templatePath, data, {}, (err, html) => {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Internal Server Error");
-      } else {
-        // Render the HTML
-        res.send(html);
-      }
-    });
-  });
-  
-  // Define a route to capture a PDF of the rendered content using Puppeteer
-  app.get("/capture-pdf", async (req, res) => {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-  
-    // Visit the route that renders the EJS template
-    await page.goto(`http://localhost:${port}/render`, { waitUntil: "domcontentloaded" });
-  
-    // Capture a PDF of the page
-    const pdfBuffer = await page.pdf();
-  
-    res.setHeader("Content-Type", "application/pdf");
-    res.setHeader("Content-Disposition", "attachment; filename=NOC.pdf");
-    res.send(pdfBuffer);
-  
-    await browser.close();
-  });
-  
+// Define a route to capture a PDF of the rendered content using Puppeteer
+app.get("/capture-pdf/:StudentID", async (req, res) => {
+    try {
+
+        // Get the StudentID parameter from the URL
+        const { StudentID } = req.params;
+
+        const browser = await puppeteer.launch({
+            headless: true, // Set to true if running on a server without a graphical interface
+        });
+        const page = await browser.newPage();
+
+        // Visit the route that renders the EJS template
+        await page.goto(`http://localhost:${PORT}/render/${StudentID}`, { waitUntil: "domcontentloaded" });
+
+        // Capture a PDF of the page
+        const pdfBuffer = await page.pdf();
+
+        res.setHeader("Content-Type", "application/pdf");
+        res.setHeader("Content-Disposition", "attachment; filename=NOC.pdf");
+        res.send(pdfBuffer);
+
+        await browser.close();
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error in /capture-pdf");
+    }
+}); 
 
 
 
