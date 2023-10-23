@@ -3,7 +3,8 @@
 
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= student.StudentID %> Details</title>
+    <title>
+        <%= student.StudentID %> Details</title>
     <link rel="icon" href="../public/img/image-2.png" type="image">
     <link rel="stylesheet" type="text/css" href="../public/css/style3.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -14,119 +15,120 @@
 <body>
 
     <div class="navbarr">
-        <img class="charusat-logo" src="/public/img/image-2.png" />
-    </div>
+        <img class="charusat-logo" src="../public/img/image-2.png" />
+        <div class="Home-nav">
+            <a href="#"> Home</a>
+        </div>
 
-    <div class="container">
-        <h2>Student Details</h2>
-        
-        <!-- Use a form for approval and rejection -->
-        <form action="/update-status" method="post">
-            <div class="form-group">
-                <label for="StudentID">Student ID:</label>
-                <input type="text" id="StudentID" name="StudentID" value="<%= student.StudentID %>" readonly>
-            </div>
-            <div class="form-group">
-                <label for="StudentName">Student Name:</label>
-                <input type="text" id="StudentName" name="StudentName" value="<%= student.StudentName || (student.FirstName + (student.MidName ? ' ' + student.MidName : '') + (student.LastName ? ' ' + student.LastName : '')) %>" readonly>
-            </div>
-            
-            
-            <!-- Other form fields here -->
-            <div class="form-group">
-                <label for="Semester">Semester:</label>
-                <input type="text" id="Semester" name="Semester" value="<%= student.Semester %>" readonly>
-            </div>
+        <div class="container">
+            <h2>Student Details</h2>
 
-            <div class="form-group">
-                <label for="CompanyName">Name of Company:</label>
-                <input type="text" id="CompanyName" name="CompanyName" value="<%= student.CompanyName %>" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="CompanyAddress">Address of Company:</label>
-                <input type="text" id="CompanyAddress" name="CompanyAddress" value="<%= student.CompanyAddress %>" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="Counsellor_InternalGuide">HR Details:</label>
-                <input type="text" id="Counsellor_InternalGuide" name="Counsellor_InternalGuide" value="<%= student.Counsellor_InternalGuide %>" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="HRphonenumber">HR Contact Number:</label>
-                <input type="text" id="HRphonenumber" name="HRphonenumber" value="<%= student.HRphonenumber %>" readonly>
-            </div>
-
-            <div class="form-group-duration">
-                <label for="Duration">Duration :</label>
-                <input type="text" id="Duration" name="Duration" value="<%= student.Duration %>" readonly>
-                <label for="StartDate">Start Date:</label>
-                <input type="text" id="StartDate" name="StartDate" value="<%= student.StartDate %>" readonly>
-                <label for="EndDate">End Date:</label>
-                <input type="text" id="EndDate" name="EndDate" value="<%= student.EndDate %>" readonly>
-            </div>
-
-            <div class="form-group-noc">
-                <label for="TypeofInternship">Type of Internship:</label>
-                <input type="text" id="TypeofInternship" name="TypeofInternship" value="<%= student.TypeofInternship %>" readonly>
-            </div>
-            <br>
-            <div class="form-group">
-                <label for="ProjectTitle">Project Title:</label>
-                <input type="text" id="ProjectTitle" name="ProjectTitle" value="<%= student.ProjectTitle %>" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="ToolsandTechnology">Tools and Technology:</label>
-                <input type="text" id="ToolsandTechnology" name="ToolsandTechnology" value="<%= student.ToolsandTechnology %>" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="status">Status:</label>
-                <span id="status"><%= student.Status %></span>
-            </div>
-            
-            
-            <!-- Hidden input for the student status -->
-            <input type="hidden" id="status" name="status" value="">
-            
-                        <!-- Approve Button -->
-                        <button type="button" onclick="updateStatus('Approved');">Approve</button>
-
-                        <!-- Reject Button -->
-                        <button type="button" onclick="updateStatus('Rejected');">Reject</button>
-                    </form>
+            <!-- Use a form for approval and rejection -->
+            <form action="/update-status" method="post">
+                <div class="form-group">
+                    <label for="StudentID">Student ID:</label>
+                    <input type="text" id="StudentID" name="StudentID" value="<%= student.StudentID %>" readonly>
                 </div>
-            
-                <script>
-                    function updateStatus(newStatus) {
-    const studentID = '<%= student.StudentID %>'; // Get student ID
-    
-    // Send an AJAX request to update the status
-    $.ajax({
-        type: 'POST',
-        url: '/update-status',
-        data: {
-            studentID: studentID,
-            newStatus: newStatus
-        },
-        success: function(response) {
-            // Update the status in the HTML
-            document.getElementById("status").textContent = newStatus;
-            console.log('Status updated:', newStatus);
-            // Redirect to the "approved.ejs" page after updating
-                window.location.href = '/manage-requests';
-        },
-        error: function(error) {
-            console.error('Error updating status:', error);
-        }
-    });
-    }
+                <div class="form-group">
+                    <label for="StudentName">Student Name:</label>
+                    <input type="text" id="StudentName" name="StudentName" value="<%= student.StudentName || (student.FirstName + (student.MidName ? ' ' + student.MidName : '') + (student.LastName ? ' ' + student.LastName : '')) %>" readonly>
+                </div>
+
+
+                <!-- Other form fields here -->
+                <div class="form-group">
+                    <label for="Semester">Semester:</label>
+                    <input type="text" id="Semester" name="Semester" value="<%= student.Semester %>" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="CompanyName">Name of Company:</label>
+                    <input type="text" id="CompanyName" name="CompanyName" value="<%= student.CompanyName %>" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="CompanyAddress">Address of Company:</label>
+                    <input type="text" id="CompanyAddress" name="CompanyAddress" value="<%= student.CompanyAddress %>" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="Counsellor_InternalGuide">HR Details:</label>
+                    <input type="text" id="Counsellor_InternalGuide" name="Counsellor_InternalGuide" value="<%= student.Counsellor_InternalGuide %>" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="HRphonenumber">HR Contact Number:</label>
+                    <input type="text" id="HRphonenumber" name="HRphonenumber" value="<%= student.HRphonenumber %>" readonly>
+                </div>
+
+                <div class="form-group-duration">
+                    <label for="Duration">Duration :</label>
+                    <input type="text" id="Duration" name="Duration" value="<%= student.Duration %>" readonly>
+                    <label for="StartDate">Start Date:</label>
+                    <input type="text" id="StartDate" name="StartDate" value="<%= student.StartDate %>" readonly>
+                    <label for="EndDate">End Date:</label>
+                    <input type="text" id="EndDate" name="EndDate" value="<%= student.EndDate %>" readonly>
+                </div>
+
+                <div class="form-group-noc">
+                    <label for="TypeofInternship">Type of Internship:</label>
+                    <input type="text" id="TypeofInternship" name="TypeofInternship" value="<%= student.TypeofInternship %>" readonly>
+                </div>
+                <br>
+                <div class="form-group">
+                    <label for="ProjectTitle">Project Title:</label>
+                    <input type="text" id="ProjectTitle" name="ProjectTitle" value="<%= student.ProjectTitle %>" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="ToolsandTechnology">Tools and Technology:</label>
+                    <input type="text" id="ToolsandTechnology" name="ToolsandTechnology" value="<%= student.ToolsandTechnology %>" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="status">Status:</label>
+                    <span id="status"><%= student.Status %></span>
+                </div>
+
+
+                <!-- Hidden input for the student status -->
+                <input type="hidden" id="status" name="status" value="">
+
+                <!-- Approve Button -->
+                <button type="button" onclick="updateStatus('Approved');">Approve</button>
+
+                <!-- Reject Button -->
+                <button type="button" onclick="updateStatus('Rejected');">Reject</button>
+            </form>
+        </div>
+
+        <script>
+            function updateStatus(newStatus) {
+                const studentID = '<%= student.StudentID %>'; // Get student ID
+
+                // Send an AJAX request to update the status
+                $.ajax({
+                    type: 'POST',
+                    url: '/update-status',
+                    data: {
+                        studentID: studentID,
+                        newStatus: newStatus
+                    },
+                    success: function(response) {
+                        // Update the status in the HTML
+                        document.getElementById("status").textContent = newStatus;
+                        console.log('Status updated:', newStatus);
+                        // Redirect to the "approved.ejs" page after updating
+                        window.location.href = '/manage-requests';
+                    },
+                    error: function(error) {
+                        console.error('Error updating status:', error);
+                    }
+                });
+            }
         </script>
     </div>
-    
+
 </body>
 
 </html>
-

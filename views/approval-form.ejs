@@ -14,70 +14,72 @@
 <body>
 
     <div class="navbarr">
-        <img class="charusat-logo" src="/public/img/image-2.png" />
-    </div>
+        <img class="charusat-logo" src="../public/img/image-2.png" />
+        <div class="Home-nav">
+            <a href="#"> Home</a>
+        </div>
 
-    <div class="container">
-        <h2>Approval Form</h2>
-        <form action="/form" method="post">
-            <div class="form-group">
-                <label for="StudentID">Student ID:</label>
-                <input type="text" id="StudentID" name="StudentID" required>
-            </div>
+        <div class="container">
+            <h2>Approval Form</h2>
+            <form action="/form" method="post">
+                <div class="form-group">
+                    <label for="StudentID">Student ID:</label>
+                    <input type="text" id="StudentID" name="StudentID" required>
+                </div>
 
-            <div class="form-group">
-                <label for="StudentName">Student Name:</label>
-                <input type="text" id="StudentName" name="StudentName" required>
-            </div>
+                <div class="form-group">
+                    <label for="StudentName">Student Name:</label>
+                    <input type="text" id="StudentName" name="StudentName" required>
+                </div>
 
-            <div class="form-group">
-                <label for="semester">Semester:</label>
-                <select id="semester" name="semester" required>
+                <div class="form-group">
+                    <label for="semester">Semester:</label>
+                    <select id="semester" name="semester" required>
                     <option value="">Select Semester</option>
                     <option value="Semester 4">Semester 4</option>
                     <option value="Semester 6">Semester 6</option>
                     <!-- Add more semester options as needed -->
                 </select>
-            </div>
+                </div>
 
-            <div class="form-group">
-                <label for="CompanyName">Name of Company:</label>
-                <input type="text" id="CompanyName" name="CompanyName" required>
-            </div>
+                <div class="form-group">
+                    <label for="CompanyName">Name of Company:</label>
+                    <input type="text" id="CompanyName" name="CompanyName" required>
+                </div>
 
-            <div class="form-group">
-                <label for="CompanyAddress">Address of Company:</label>
-                <input type="text" id="CompanyAddress" name="CompanyAddress" required>
-            </div>
+                <div class="form-group">
+                    <label for="CompanyAddress">Address of Company:</label>
+                    <input type="text" id="CompanyAddress" name="CompanyAddress" required>
+                </div>
 
-            <div class="form-group">
-                <label for="Counsellor_InternalGuide">HR Details:</label>
-                <input type="text" id="Counsellor_InternalGuide" name="Counsellor_InternalGuide" required>
-            </div>
+                <div class="form-group">
+                    <label for="Counsellor_InternalGuide">HR Details:</label>
+                    <input type="text" id="Counsellor_InternalGuide" name="Counsellor_InternalGuide" required>
+                </div>
 
-            <div class="form-group">
-                <label for="HRphonenumber">HR Contact Number:</label>
-                <input type="text" id="HRphonenumber" name="HRphonenumber" required>
-            </div>
+                <div class="form-group">
+                    <label for="HRphonenumber">HR Contact Number:</label>
+                    <input type="text" id="HRphonenumber" name="HRphonenumber" required>
+                </div>
 
-            <div class="form-group-duration">
-                <label for="duration">Duration :</label>
-                <input type="text" id="duration" name="duration">
-                <label for="startDate">Start Date:</label>
-                <input type="text" id="startDate" name="startDate">
-                <label for="endDate">End Date:</label>
-                <input type="text" id="endDate" name="endDate">
-            </div>
+                <div class="form-group-duration">
+                    <label for="duration">Duration :</label>
+                    <input type="text" id="duration" name="duration">
+                    <label for="startDate">Start Date:</label>
+                    <input type="text" id="startDate" name="startDate">
+                    <label for="endDate">End Date:</label>
+                    <input type="text" id="endDate" name="endDate">
+                </div>
 
-            <div class="form-group-noc">
-                <label for="TypeofInternship">Type of Internship:</label>
-                <input type="radio" id="TypeofInternship_InCompany" name="TypeofInternship" value="In company" required>
-                <label for="TypeofInternship_InCompany">In company</label>
-                <input type="radio" id="TypeofInternship_InHouse" name="TypeofInternship" value="In house">
-                <label for="TypeofInternship_InHouse">In house</label>
-            </div>
-            <br>
-            <!-- <div class="form-group">
+                <div class="form-group-noc">
+                    <label for="TypeofInternship">Type of Internship:</label>
+                    <input type="radio" id="TypeofInternship_InCompany" name="TypeofInternship" value="In company" required>
+                    <label for="TypeofInternship_InCompany">In company</label>
+                    <input type="radio" id="TypeofInternship_InHouse" name="TypeofInternship" value="In house">
+                    <label for="TypeofInternship_InHouse">In house</label>
+                </div>
+                <br>
+                <!-- <div class="form-group">
                 <label for="ProjectTitle">Project Title:</label>
                 <input type="text" id="ProjectTitle" name="ProjectTitle" required>
             </div>
@@ -89,11 +91,11 @@
 
 
 
-            <div class="form-group">
-                <button type="submit" class="btn">Submit</button>
-            </div>
-        </form>
-    </div>
+                <div class="form-group">
+                    <button type="submit" class="btn">Submit</button>
+                </div>
+            </form>
+        </div>
 </body>
 
 </html>
