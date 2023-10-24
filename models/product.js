@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema({
 
 userSchema.plugin(passportLocalMongoose);
 
-const User = mongoose.model('User', userSchema);
+
+// const User = mongoose.model('User', userSchema);
 
 
 const productSchema = new mongoose.Schema({
@@ -77,7 +78,7 @@ const productSchema = new mongoose.Schema({
     },
     Status: { 
         type: String,
-        default: "ending", // Default value of "Not Provided"
+        default: "Pending", // Default value of "Not Provided"
     },
     Semester: { 
         type: String,
@@ -102,10 +103,15 @@ const productSchema = new mongoose.Schema({
     },
 
 });
-// You may also need to add Passport.js and Passport-Local-Mongoose for authentication.
-userSchema.plugin(passportLocalMongoose);
+// Create and export the Product model
+const Product = mongoose.model('Product', productSchema);
+
+// Create and export the User model
+const User = mongoose.model('User', userSchema);
 
 module.exports = {
-    Product: mongoose.model('Product', productSchema),
-    User: User,
+    Product,
+    User,
 };
+// module.exports = mongoose.model('Product', productSchema);
+ 

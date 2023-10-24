@@ -6,7 +6,7 @@ const mongoose = require("mongoose");
 const PDFDocument = require('pdfkit');
 const ejs = require("ejs");
 const path = require("path");
-const Product = require("./models/product");
+const {Product} = require("./models/product");
 const ExcelJS = require('exceljs');
 const bodyParser = require('body-parser');
 const fs = require('fs');
@@ -82,6 +82,7 @@ app.get("/render/:StudentID", async (req, res) => {
 
         // Fetch the latest student from the database
         const student = await Product.findOne({ StudentID });
+        console.log(student);
 
         // Check if a student was found
         if (!student) {
@@ -324,12 +325,19 @@ app.get("/search-students", async (req, res) => {
                 totalPages
             });
         }
+        else{
+            return res.render("manage-requests", {
+                students,
+                currentPage,
+                totalPages
+            });
+        }
 
         // If no search query is provided, redirect back to the paginated page
         res.redirect("/manage-requests");
     } catch (error) {
         console.error(error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send("Internal Server Error at /search-student");
     }
 });
 
