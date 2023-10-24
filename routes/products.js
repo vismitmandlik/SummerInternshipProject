@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 const { Product } = require("../models/product"); 
+const passport = require('passport');
 
 
 
@@ -35,6 +36,25 @@ router.post("/login", async (req, res) => {
         res.status(500);
     }
 });
+
+
+// // Define the authentication route
+// router.post("/login", passport.authenticate('local', {
+//     successRedirect: '/student-dashboard', // Redirect to the student dashboard on success
+//     failureRedirect: '/', // Redirect back to the login page on failure
+//     failureFlash: true,
+//   }));
+  
+//   // Ensure the username is set in the session after successful login
+//   router.post("/login", (req, res) => {
+//     // req.user.username should contain the authenticated user's username
+//     req.login(req.user, (err) => {
+//       if (!err) {
+//         // Redirect to the student dashboard after setting the session
+//         res.redirect('/student-dashboard');
+//       }
+//     });
+//   });
 
 // Home Route
 router.get("/", async (req, res) => {

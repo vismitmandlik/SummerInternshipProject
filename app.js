@@ -16,6 +16,7 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const expressSession = require('express-session');
 require('events').EventEmitter.defaultMaxListeners = 20; // Increase the limit as needed
+const {User} = require('./models/product'); 
 
 // Set up EJS as the template engine
 app.set("view engine", "ejs");
@@ -37,7 +38,7 @@ db.on('error', () => console.log("Error in Connecting to Database"));
 db.once('open', () => console.log("Connected to Database"))
 
 // PORT
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 7000;
 
 const products_routes = require("./routes/products");
 
@@ -188,19 +189,21 @@ app.use("/",router)
 
 
 
-// Dashboard Route
+// Dashboard Route //why it is not passing studentID from the database to student-dashboard?
+
 app.get("/student-dashboard", async (req, res) => {
     try {
         const Product = mongoose.model("Product");
-        const data = await Product.find().sort({
-            StudentID: -1
-        });;
-        res.render('student-dashboard', {
-            data
-        });
+        const studentID = req.query.StudentID; // Get StudentID from the query parameter
+
+        // Fetch the details of the specific student using the StudentID
+        const student = await Product.findOne({
+            StudentID: studentID
+        }).lean();
+        res.render('student-dashboard',student);
     } catch (error) {
         console.error(error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send("Internal Server Error at /student-dashboard");
     }
 });
 
@@ -647,9 +650,6 @@ app.use((err, req, res, next) => {
     console.error(err);
     res.status(500).render('error', { message: 'An error occurred' });
   });
-
-
-
 
 const start = async () => {
     try {
