@@ -74,6 +74,69 @@ select label {
     border-radius: 4px;
 }
 
+input[id="StudentID"],
+select label {
+    margin-left: 10%;
+    width: 25%;
+    padding: 09px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+input[id="StudentName"],
+select label {
+    margin-left: 8%;
+    width: 25%;
+    padding: 09px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+select[id="semester"],
+select label {
+    margin-left: 10.50%;
+    
+}
+
+input[id="CompanyName"],
+select label {
+    margin-left: 6%;
+    width: 25%;
+    padding: 09px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+
+input[id="CompanyAddress"],
+select label {
+    margin-left: 4.65%;
+    width: 25%;
+    padding: 09px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+input[id="Counsellor_InternalGuide"],
+select label {
+    margin-left: 10%;
+    width: 25%;
+    padding: 09px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+input[id="HRphonenumber"],
+select label {
+    margin-left: 5.10%;
+    width: 25%;
+    padding: 09px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+
+
 select {
     height: 25px;
 }
