@@ -13,6 +13,7 @@
 
 body {
     background: #dfe9f5;
+    overflow: hidden;
 }
 
 @media screen and (max-width: 768px) {
@@ -107,7 +108,7 @@ a:hover {
 }
 
 .logout {
-    position: absolute;
+    position: relative;
     bottom: 0;
 }
 
@@ -164,10 +165,10 @@ a:hover {
 .main-skills .card button {
     background: #16629E;
     color: #fff;
-    padding: 7px 15px;
+    padding: 10px 15px;
     border-radius: 5px;
     margin-top: 10px;
-    margin-left: -55%;
+    margin-left: -49%;
     cursor: pointer;
 }
 
