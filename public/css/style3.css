@@ -135,6 +135,24 @@ select label {
     border-radius: 4px;
 }
 
+input[id="ProjectTitle"],
+select label {
+    margin-left: 9%;
+    width: 25%;
+    padding: 09px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+input[id="ToolsandTechnology"],
+select label {
+    margin-left: 4%;
+    width: 25%;
+    padding: 09px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
 
 
 select {
