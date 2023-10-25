@@ -98,6 +98,15 @@ select label {
     
 }
 
+input[id="Semester"],
+select label {
+    margin-left: 10.50%;
+    width: 25%;
+    padding: 09px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
 input[id="CompanyName"],
 select label {
     margin-left: 6%;
@@ -135,6 +144,32 @@ select label {
     border-radius: 4px;
 }
 
+input[id="TypeofInternship"],
+select label {
+    margin-left: 6%;
+    width: 25%;
+    padding: 09px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+input[id="ProjectTitle"],
+select label {
+    margin-left: 9%;
+    width: 25%;
+    padding: 09px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
+
+input[id="ToolsandTechnology"],
+select label {
+    margin-left: 4%;
+    width: 25%;
+    padding: 09px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+}
 
 
 select {
@@ -151,8 +186,36 @@ select {
     cursor: pointer;
 }
 
+.btn1 {
+    background-color: #2eec2b;
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn2 {
+    background-color: #f1662a;
+    color: #fff;
+    padding: 10px 20px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
 .btn:hover {
     background-color: #0056b3;
+}
+
+.btn1:hover {
+    background-color: #21b300;
+}
+
+.btn2:hover {
+    background-color: #b33900;
 }
 
 .form-group-noc label,
