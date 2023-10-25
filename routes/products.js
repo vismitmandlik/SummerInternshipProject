@@ -15,18 +15,22 @@ router.get('/search-student', (req, res) => {
 // Define the authentication route
 router.post("/login", async (req, res) => {
     try {
-        const { username } = req.body; // Assuming "username" is the StudentID
+        const { username, password } = req.body; // Assuming "username" is the StudentID
 
         // Check if the provided username (StudentID) exists in the database
         const student = await Product.findOne({ StudentID: username });
-
-        if (student) {
+        const faculty = await Product.findOne({FacultyID: username});
+        if (username == "snehapadhiar" && password=="admin"){
+            res.redirect("/admin-dashboard");
+        }
+        else if (student ) {
             // StudentID exists, proceed with authentication
             // You can add more authentication logic here if needed
 
             // Redirect to a dashboard or profile page upon successful authentication
             res.redirect("/student-dashboard"); // Change the URL as needed
-        } else {
+        } 
+        else {
             // StudentID not found, display an error message
             console.log("Unauthorized ID ")
             res.redirect("/")
