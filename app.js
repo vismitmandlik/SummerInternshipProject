@@ -226,7 +226,7 @@ function requireAdmin(req, res, next) {
 
 
 // Admin Dashboard Route
-app.get("/admin-dashboard", requireAdmin, async (req, res) => {
+app.get("/admin-dashboard", async (req, res) => {
     try {
         const username = req.query.username;
         // const Product = mongoose.model("Product");
