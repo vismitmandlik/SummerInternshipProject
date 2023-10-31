@@ -1,64 +1,53 @@
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const { Product } = require("../models/product"); 
+const { Product, User } = require("../models/product"); 
 const passport = require('passport');
 
 
-
+// search-student route
 router.get('/search-student', (req, res) => {
   const { studentID } = req.query;
   const student = students.find((s) => s.StudentID === studentID);
   res.json(student);
 });
 
-// Define the authentication route
+
+// login route
 router.post("/login", async (req, res) => {
-    try {
+    try{
         const { username, password } = req.body; // Assuming "username" is the StudentID
+        const data = await User.findOne({ username: username });
+        
+        // check for faculty
+        if(data.role=="faculty" && data.password==password){      
+            res.render('admin-dashboard', { username: username });
 
-        // Check if the provided username (StudentID) exists in the database
-        const student = await Product.findOne({ StudentID: username });
-        const faculty = await Product.findOne({FacultyID: username});
-        if (username == "snehapadhiar" && password=="admin"){
-            res.redirect("/admin-dashboard");
         }
-        else if (student ) {
-            // StudentID exists, proceed with authentication
-            // You can add more authentication logic here if needed
 
-            // Redirect to a dashboard or profile page upon successful authentication
-            res.redirect("/student-dashboard"); // Change the URL as needed
+        // check for student
+        else if(data &&data.password==password) {
+            const student = await Product.findOne({
+                StudentID: username
+            }).lean();
+            res.render('student-dashboard',{student : student, username: username});
+            // res.render('student-dashboard', { username: username });
         } 
+
+        // User not found
         else {
             // StudentID not found, display an error message
-            console.log("Unauthorized ID ")
+            console.log(`Unauthorized ID: ${username} or Password: ${password}`)
             res.redirect("/")
-        }
-    } catch (error) {
+        }    
+    } 
+    catch (error) {
         console.error(error);
         res.status(500);
+        res.redirect('/');
     }
 });
 
-
-// // Define the authentication route
-// router.post("/login", passport.authenticate('local', {
-//     successRedirect: '/student-dashboard', // Redirect to the student dashboard on success
-//     failureRedirect: '/', // Redirect back to the login page on failure
-//     failureFlash: true,
-//   }));
-  
-//   // Ensure the username is set in the session after successful login
-//   router.post("/login", (req, res) => {
-//     // req.user.username should contain the authenticated user's username
-//     req.login(req.user, (err) => {
-//       if (!err) {
-//         // Redirect to the student dashboard after setting the session
-//         res.redirect('/student-dashboard');
-//       }
-//     });
-//   });
 
 // Home Route
 router.get("/", async (req, res) => {

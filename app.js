@@ -17,30 +17,31 @@ const LocalStrategy = require('passport-local').Strategy;
 const expressSession = require('express-session');
 require('events').EventEmitter.defaultMaxListeners = 20; // Increase the limit as needed
 const {User} = require('./models/product'); 
+const products_routes = require("./routes/products");
+const isAdmin = require("./middleware/middleware");
+
 
 // Set up EJS as the template engine
 app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
+app.set('views', path.join(__dirname, 'views'));
 
 app.use('/public/css', express.static(__dirname + '/public/css'));
 app.use('/public/scripts', express.static(__dirname + '/public/scripts'));
 app.use('/public/img', express.static(__dirname + '/public/img'));
-app.set('views', path.join(__dirname, 'views'));
-
 app.use(expressSession({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
 
 
 var db = mongoose.connection;
-
 db.on('error', () => console.log("Error in Connecting to Database"));
 db.once('open', () => console.log("Connected to Database"))
+
 
 // PORT
 const PORT = process.env.PORT || 7000;
 
-const products_routes = require("./routes/products");
 
 // Middlewares
 app.use(bodyParser.urlencoded({
@@ -98,6 +99,7 @@ app.get("/render/:StudentID", async (req, res) => {
     }
 });
   
+
 // Define a route to capture a PDF of the rendered content using Puppeteer
 app.get("/capture-pdf/:StudentID", async (req, res) => {
     try {
@@ -200,23 +202,44 @@ app.get("/student-dashboard", async (req, res) => {
         const student = await Product.findOne({
             StudentID: studentID
         }).lean();
-        res.render('student-dashboard',student);
+            res.render('student-dashboard',{student : student});
+        
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error at /student-dashboard");
     }
 });
 
+
+
+// Authorization middleware
+function requireAdmin(req, res, next) {
+    // Assuming you store the user's role in req.user.role
+    if (req.user && req.user.role === 'admin') {
+        return next(); // Allow access for admin users
+    }
+    res.redirect('/'); // Unauthorized access
+}
+
+
+
+
+
 // Admin Dashboard Route
-app.get("/admin-dashboard", async (req, res) => {
+app.get("/admin-dashboard", requireAdmin, async (req, res) => {
     try {
-        const Product = mongoose.model("Product");
-        const data = await Product.find().sort({
-            StudentID: 1
-        }); // Sort by StudentID
-        res.render('admin-dashboard', {
-            data
-        });
+        const username = req.query.username;
+        // const Product = mongoose.model("Product");
+        // const data = await Product.find().sort({
+        //     StudentID: 1
+        // }); // Sort by StudentID
+        // isAdmin(req.username)? res.render('admin-dashboard', {
+        //     data
+        // }):res.redirect('/')
+
+        console.log(username)
+        res.render('admin-dashboard',{ username: username})
+       
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error");
@@ -301,6 +324,8 @@ app.get("/manage-requests", async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
+
 // for search bar
 app.get("/search-students", async (req, res) => {
     try {
@@ -329,6 +354,18 @@ app.get("/search-students", async (req, res) => {
             });
         }
         else{
+            const students = await Product.find({
+                $or: [
+                    { StudentID: { $regex: query, $options: 'i' } }, // Match StudentID (case-insensitive)
+                    { StudentName: { $regex: query, $options: 'i' } }, // Match StudentName (case-insensitive)
+                    // Add more fields to search if needed
+                ]
+            });
+            const studentsPerPage = 10; // Set the number of students per page
+            const currentPage = parseInt(req.query.page) || 1; // Get the current page from the query parameters, default to page 1
+
+            const totalStudents = await Product.countDocuments();
+            const totalPages = Math.ceil(totalStudents / studentsPerPage);
             return res.render("manage-requests", {
                 students,
                 currentPage,
@@ -336,8 +373,6 @@ app.get("/search-students", async (req, res) => {
             });
         }
 
-        // If no search query is provided, redirect back to the paginated page
-        res.redirect("/manage-requests");
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error at /search-student");
@@ -534,7 +569,7 @@ app.post('/generate-report', async (req, res) => {
 
         // Define headers based on your MongoDB schema
         const headers = Object.keys(Product.schema.paths)
-            .filter((field) => field !== '_id' && field !== '__v') // Exclude MongoDB-specific fields
+            .filter((field) =>  field !== '__v') // Exclude MongoDB-specific fields
             .map((field) => field.charAt(0).toUpperCase() + field.slice(1)); // Capitalize the first letter
         worksheet.addRow(headers);
 
@@ -646,7 +681,7 @@ function generatePDFTable(doc, table) {
 
 // ...
 // Custom error handling middleware
-app.use((err, req, res, next) => {
+app.get('/error',(err, req, res, next) => {
     console.error(err);
     res.status(500).render('error', { message: 'An error occurred' });
   });
