@@ -25,11 +25,11 @@ const productSchema = new mongoose.Schema({
         required: true,
         unique: true, // Ensure uniqueness of StudentID
         index: true, // Create an index on StudentID
+        // TODO: Remove default
         default: "Not Provided",
       },
     StudentName:{
         type: String,
-        //required:true,
         default: "Not Provided", // Default value of "Not Provided"
     },
     TypeofInternship:{

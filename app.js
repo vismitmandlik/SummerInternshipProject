@@ -3,22 +3,14 @@ const express = require("express");
 const app = express();
 const connectDB = require("./db/connect");
 const mongoose = require("mongoose");
-const PDFDocument = require('pdfkit');
 const ejs = require("ejs");
 const path = require("path");
 const {Product} = require("./models/product");
-const ExcelJS = require('exceljs');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-const router = require("./routes")
 const puppeteer = require("puppeteer");
 const passport = require('passport');
-const LocalStrategy = require('passport-local').Strategy;
 const expressSession = require('express-session');
 require('events').EventEmitter.defaultMaxListeners = 20; // Increase the limit as needed
-const {User} = require('./models/product'); 
-const isAdmin = require("./middleware/middleware");
-
 
 
 // Set up EJS as the template engine
@@ -38,29 +30,25 @@ var db = mongoose.connection;
 db.on('error', () => console.log("Error in Connecting to Database"));
 db.once('open', () => console.log("Connected to Database"))
 
-
 // PORT
 const PORT = process.env.PORT || 7000;
 
-
 // Middlewares
-
+app.use(express.static('public'));
 app.use(bodyParser.urlencoded({
     extended: false
 }));    
 app.use(express.urlencoded({
     extended: true
 }));    
-app.use(express.static('public'));
 
 
 //Headers
-// In the generate PDF section, continue to use the generatePDFTable function:
 const headers = [
     "StudentID",
     "StudentName",
     "FirstName",
-    "MidName",
+    "MidName",  
     "LastName",
     "Semester",
     "CompanyName",
@@ -75,45 +63,22 @@ const headers = [
     "ToolsandTechnology",
 ];    
 
-
-
-
 // // // Routes
 
 
 
 // //  // Use routes
-
-// home route
 app.use('/', require("./routes"));
-
-// register-faculty route
 app.use('/register-faculty', require("./routes/authRoutes"));
-
-// student-dashboard route
 app.use('/student-dashboard', require("./routes/studentRoutes"));
-
-// Admin Dashboard Route
 app.use('/admin-dashboard', require("./routes/adminRoutes"));
-
-// Certificate Uploading Route
 app.use('/certification', require("./routes/certificateRoutes"))
-
-
-
-
-
-
-
-
-
-
-
-
+app.use('/generate/', require("./routes/reportGenerationRoutes"))
 
 
 // For NOC generation
 // Define a route to render your EJS template
+
 app.get("/render/:StudentID", async (req, res) => {
     try {
         // Get the StudentID parameter from the URL
@@ -168,36 +133,6 @@ app.get("/capture-pdf/:StudentID", async (req, res) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Authorization middleware
-function requireAdmin(req, res, next) {
-    // Assuming you store the user's role in req.user.role
-    if (req.user && req.user.role === 'admin') {
-        return next(); // Allow access for admin users
-    }
-    res.redirect('/'); // Unauthorized access
-}
-
-
-
-
-
-
 // Confirmation Page
 app.get("/confirmation-form", async (req, res) => {
     try {
@@ -248,7 +183,6 @@ app.get("/get-students", async (req, res) => {
 
 
 // Manage Requests Route
-
 app.get("/manage-requests", async (req, res) => {
     try {
         const Product = mongoose.model("Product");
@@ -472,34 +406,6 @@ app.post("/update-status", async (req, res) => {
     }
 });
 
-// Your data retrieval function for analytics
-
-async function fetchData(selectedColumns) {
-
-    const Product = mongoose.model("Product");
-    const data = await Product.find().sort({
-        StudentID: -1
-    }); // Sort by StudentID
-
-    // Filter the data based on selected columns
-    const filteredData = data.map(row =>
-        row.filter((col, index) => selectedColumns.includes(index.toString()))
-    );
-
-    return filteredData;
-}
-
-
-async function retrieveData() {
-    try {
-        const data = await Product.find().exec();
-        return data;
-    } catch (error) {
-        console.error('Error retrieving data:', error);
-        throw error;
-    }
-}
-
 // Define a route for rendering the student list
 app.get('/analytics', async (req, res) => {
     const students = await Product.find().exec();
@@ -508,130 +414,6 @@ app.get('/analytics', async (req, res) => {
     });
 });
 
-app.post('/generate-report', async (req, res) => {
-    const format = req.body.format;
-
-    // Fetch student data from the database
-    const students = await Product.find().exec();
-
-    if (format === 'excel') {
-        // Generate and send an Excel report
-        const workbook = new ExcelJS.Workbook();
-        const worksheet = workbook.addWorksheet('Student Report');
-
-        // Define headers based on your MongoDB schema
-        const headers = Object.keys(Product.schema.paths)
-            .filter((field) =>  field !== '__v') // Exclude MongoDB-specific fields
-            .map((field) => field.charAt(0).toUpperCase() + field.slice(1)); // Capitalize the first letter
-        worksheet.addRow(headers);
-
-        // Add student data
-        students.forEach((student) => {
-            // Convert the student object into an array of values
-            const rowData = headers.map((header) => student[header] || 'Not Provided');
-            worksheet.addRow(rowData);
-        });
-
-        // Generate a filename with the current date
-        const currentDate = new Date().toLocaleDateString().replace(/\//g, '-'); // Format date as "MM-DD-YYYY"
-        const filename = `StudentsReport-${currentDate}.xlsx`;
-
-        res.setHeader('Content-Type', 'application/vnd.openxmlformats');
-        res.setHeader('Content-Disposition', `attachment; filename=${filename}`);
-        await workbook.xlsx.write(res);
-
-        // End the response to prevent further headers from being set
-        res.end();
-    } else if (format === 'pdf') {
-        // Generate and send a PDF report
-
-        
-
-
-        const doc = new PDFDocument();
-        res.setHeader('Content-Type', 'application/pdf');
-
-
-        // Generate a filename with the current date
-        const currentDate = new Date().toLocaleDateString().replace(/\//g, '-'); // Format date as "MM-DD-YYYY"
-        const filename = `StudentsReport-${currentDate}.pdf`;
-
-        res.setHeader('Content-Disposition',  `attachment; filename=${filename}`);
-        doc.pipe(res);
-
-
-        doc.fontSize(20).text('Student Report', {
-            align: 'center'
-        });
-
-        // Define headers based on your MongoDB schema
-        const headers = Object.keys(Product.schema.paths)
-            .filter((field) => field !== '_id' && field !== '__v') // Exclude MongoDB-specific fields
-            .map((field) => field.charAt(0).toUpperCase() + field.slice(1)); // Capitalize the first letter
-
-        // Generate a table with all student details
-        const table = {
-            headers,
-            rows: students.map((student) =>
-                headers.map((header) => student[header] || 'Not Provided')
-            ),
-        };
-        generatePDFTable(doc, table);
-
-        doc.end(); // End the PDF document
-
-        // End the response to prevent further headers from being set
-        res.end();
-    } else {
-        res.status(400).send('Invalid report format');
-    }
-});
-
-
-// ...
-
-function generatePDFTable(doc, table) {
-    const tableHeaders = table.headers;
-    const tableRows = table.rows;
-    const columnWidths = tableHeaders.map((header) => header.length * 8);
-
-    const cellPadding = 10;
-    const initialX = 50;
-    const initialY = 100;
-    let currentX = initialX;
-    let currentY = initialY;
-
-    // Draw table headers
-    doc.font('Helvetica-Bold');
-    tableHeaders.forEach((header, i) => {
-        doc.rect(currentX, currentY, columnWidths[i], cellPadding).fillAndStroke('#eee', '#000');
-        doc.text(header, currentX + cellPadding / 2, currentY + cellPadding / 2);
-        currentX += columnWidths[i];
-    });
-
-    doc.moveDown();
-
-    // Draw table rows
-    doc.font('Helvetica');
-    tableRows.forEach((row) => {
-        currentX = initialX;
-        currentY += cellPadding;
-
-        row.forEach((cell, i) => {
-            doc.rect(currentX, currentY, columnWidths[i], cellPadding).fillAndStroke('#fff', '#000');
-            doc.text(cell, currentX + cellPadding / 2, currentY + cellPadding / 2);
-            currentX += columnWidths[i];
-        });
-
-        currentY += cellPadding;
-    });
-}
-// ...
-
-// In the generate PDF section, continue to use the generatePDFTable function:
-
-
-// ...
 // Custom error handling middleware
 app.get('/error',(err, req, res, next) => {
     console.error(err);

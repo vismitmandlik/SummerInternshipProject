@@ -11,6 +11,7 @@
             return studentIdA.localeCompare(studentIdB);
         }
 
+    
         function filterTable() {
             const table = document.getElementById('student-table');
             const rows = Array.from(table.querySelectorAll('tr'));
@@ -42,11 +43,10 @@
     </script>
 </head>
 <body>
-
     <div class="navbarr">
         <img class="charusat-logo" src="/public/img/image-2.png" />
         <div class="download-section">
-            <form action="/generate-report" method="post">
+            <form action="/generate/report" method="post">
                 <label>Generate Report:</label>
                 <select name="format">
                     <option value="excel">Excel (XLSX)</option>
