@@ -102,6 +102,11 @@ const productSchema = new mongoose.Schema({
         ref: 'User',
     },
 
+    // field for the certificate file
+    certificate: {
+        type: Buffer,
+    },
+
 });
 // Create and export the Product model
 const Product = mongoose.model('Product', productSchema);

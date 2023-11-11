@@ -10,15 +10,15 @@ const {Product} = require("./models/product");
 const ExcelJS = require('exceljs');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const router = require("./routes/products")
+const router = require("./routes")
 const puppeteer = require("puppeteer");
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const expressSession = require('express-session');
 require('events').EventEmitter.defaultMaxListeners = 20; // Increase the limit as needed
 const {User} = require('./models/product'); 
-const products_routes = require("./routes/products");
 const isAdmin = require("./middleware/middleware");
+
 
 
 // Set up EJS as the template engine
@@ -44,12 +44,13 @@ const PORT = process.env.PORT || 7000;
 
 
 // Middlewares
+
 app.use(bodyParser.urlencoded({
     extended: false
-}));
+}));    
 app.use(express.urlencoded({
     extended: true
-}));
+}));    
 app.use(express.static('public'));
 
 
@@ -72,7 +73,43 @@ const headers = [
     "TypeofInternship",
     "ProjectTitle",
     "ToolsandTechnology",
-];
+];    
+
+
+
+
+// // // Routes
+
+
+
+// //  // Use routes
+
+// home route
+app.use('/', require("./routes"));
+
+// register-faculty route
+app.use('/register-faculty', require("./routes/authRoutes"));
+
+// student-dashboard route
+app.use('/student-dashboard', require("./routes/studentRoutes"));
+
+// Admin Dashboard Route
+app.use('/admin-dashboard', require("./routes/adminRoutes"));
+
+// Certificate Uploading Route
+app.use('/certification', require("./routes/certificateRoutes"))
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 // For NOC generation
@@ -81,7 +118,7 @@ app.get("/render/:StudentID", async (req, res) => {
     try {
         // Get the StudentID parameter from the URL
         const { StudentID } = req.params;
-
+        
         // Fetch the latest student from the database
         const student = await Product.findOne({ StudentID });
         console.log(student);
@@ -89,15 +126,15 @@ app.get("/render/:StudentID", async (req, res) => {
         // Check if a student was found
         if (!student) {
             return res.status(404).send("Student data not found for the specified StudentID");
-        }
+        }    
 
         // Render the EJS template with the student data
         res.render("noc", { student }); // Assuming your EJS file is named "noc.ejs"
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error in /render");
-    }
-});
+    }    
+});    
   
 
 // Define a route to capture a PDF of the rendered content using Puppeteer
@@ -109,7 +146,7 @@ app.get("/capture-pdf/:StudentID", async (req, res) => {
 
         const browser = await puppeteer.launch({
             headless: true, // Set to true if running on a server without a graphical interface
-        });
+        });    
         const page = await browser.newPage();
 
         // Visit the route that renders the EJS template
@@ -126,89 +163,24 @@ app.get("/capture-pdf/:StudentID", async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).send("Internal Server Error in /capture-pdf");
-    }
-}); 
-
-
-
-
-// Routes
-
-
-// Authentication-------------------------------------------------------------------------->
-
-
-app.get("/register-faculty", async (req, res) => {
-    try {
-        const Product = mongoose.model("Product");
-        const data = await Product.findOne().lean().sort({
-            StudentID: -1
-        });; // Fetch data from the database
-        if (true) {
-        res.render("register-faculty", {
-            data
-        }); }
-        else {
-            // If not authenticated or not an admin, send an "Access denied" response
-            res.redirect("admin-dashboard");// Create an EJS file for confirmation
-    }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error at .get/register-faculty");
-    }
-});
-
-
-// Register Faculty Route (accessible by admin)
-app.post("/register-faculty", async (req, res) => {
-    try {
-        const { username, role, password } = req.body;
-
-        // Check if the current user has admin privileges to access this route
-        if (true) {
-            // Create a new faculty user
-            const faculty = new User({ username, role: "faculty", password });
-            
-            // Save the faculty user to the database
-            await faculty.save();
-
-            res.redirect("/admin-dashboard"); // Redirect to the admin dashboard after successful registration
-        } else {
-            res.status(403).send("Access denied"); // Unauthorized access
-        }
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error");
-    }
-});
+    }    
+});     
 
 
 
 
 
-// // Home Route
-app.use("/",router)
 
 
 
-// Dashboard Route //why it is not passing studentID from the database to student-dashboard?
 
-app.get("/student-dashboard", async (req, res) => {
-    try {
-        const Product = mongoose.model("Product");
-        const studentID = req.query.StudentID; // Get StudentID from the query parameter
 
-        // Fetch the details of the specific student using the StudentID
-        const student = await Product.findOne({
-            StudentID: studentID
-        }).lean();
-            res.render('student-dashboard',{student : student});
-        
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error at /student-dashboard");
-    }
-});
+
+
+
+
+
+
 
 
 
@@ -225,26 +197,6 @@ function requireAdmin(req, res, next) {
 
 
 
-// Admin Dashboard Route
-app.get("/admin-dashboard", async (req, res) => {
-    try {
-        const username = req.query.username;
-        // const Product = mongoose.model("Product");
-        // const data = await Product.find().sort({
-        //     StudentID: 1
-        // }); // Sort by StudentID
-        // isAdmin(req.username)? res.render('admin-dashboard', {
-        //     data
-        // }):res.redirect('/')
-
-        console.log(username)
-        res.render('admin-dashboard',{ username: username})
-       
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error");
-    }
-});
 
 // Confirmation Page
 app.get("/confirmation-form", async (req, res) => {

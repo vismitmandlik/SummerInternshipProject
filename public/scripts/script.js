@@ -17,6 +17,10 @@ function RegisterFaculty() {
     window.location.href = "/register-faculty"; // Change the URL to the route for approved.ejs
 }
 
+function certification(studentId) {
+    window.location.href = "/certification/completion-certificate/:studentId"; // Change the URL to the route for approved.ejs
+}
+
 // Define the function to fetch student data
 function fetchStudentData(callback) {
     // Make an AJAX request to fetch student data
