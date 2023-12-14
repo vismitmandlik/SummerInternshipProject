@@ -91,45 +91,44 @@
                 <span id="status"><%= student.Status %></span>
             </div>
             
-            
             <!-- Hidden input for the student status -->
             <input type="hidden" id="status" name="status" value="">
             
-                        <!-- Approve Button -->
-                        <button type="button" class="btn1" onclick="updateStatus('Approved');">Approve</button>
+            <!-- Approve Button -->
+            <button type="button" class="btn1" onclick="updateStatus('Approved');">Approve</button>
 
-                        <!-- Reject Button -->
-                        <button type="button" class="btn2" onclick="updateStatus('Rejected');">Reject</button>
-                    </form>
-                </div>
-            
-                <script>
-                    function updateStatus(newStatus) {
-                        const studentID = '<%= student.StudentID %>'; // Get student ID
-                        
-                        // Send an AJAX request to update the status
-                        $.ajax({
-                            type: 'POST',
-                            url: '/update-status',
-                            data: {
-                                studentID: studentID,
-                                newStatus: newStatus
-                            },
-                            success: function(response) {
-                                // Update the status in the HTML
-                                document.getElementById("status").textContent = newStatus;
-                                console.log('Status updated:', newStatus);
-                                // Redirect to the "approved.ejs" page after updating
-                                alert(data.message);
-                                window.location.href = '/manage-requests';
-                            },
-                            error: function(error) {
-                                console.error('Error updating status:', error);
-                            }
-                        });
-                        }
-                </script>
+            <!-- Reject Button -->
+            <button type="button" class="btn2" onclick="updateStatus('Rejected');">Reject</button>
+        </form>
     </div>
+            
+    <script>
+        function updateStatus(newStatus) {
+            const studentID = '<%= student.StudentID %>'; // Get student ID
+            
+            // Send an AJAX request to update the status
+            $.ajax({
+                type: 'POST',
+                url: '/update-status',
+                data: {
+                    studentID: studentID,
+                    newStatus: newStatus
+                },
+                success: function(response) {
+                    // Update the status in the HTML
+                    document.getElementById("status").textContent = newStatus;
+                    console.log('Status updated:', newStatus);
+                    // Redirect to the "approved.ejs" page after updating
+                    alert(`Status ${newStatus} successfully !`);
+                    window.location.href = '/manage-requests';
+                },
+                error: function(error) {
+                    console.error('Error updating status:', error);
+                }
+            });
+            }
+    </script>
+    <!-- </div> -->
     
 </body>
 

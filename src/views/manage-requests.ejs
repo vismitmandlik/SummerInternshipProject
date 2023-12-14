@@ -30,6 +30,7 @@
             <th>Name</th>
             <th>View</th>
             <th>Status</th>
+            <th>Certificate</th>
             <th>Download NOC</th>
         </tr>
         <% students.forEach((student) => { %>
@@ -40,6 +41,17 @@
                     <a href="/viewdetails?StudentID=<%= student.StudentID %>">View</a>
                 </td>
                 <td id="status-<%= student.StudentID %>"><%= student.Status %></td>
+                <td>
+                    <% if (student.certificate) { %>
+                        <a href="/certification/certificate-preview/<%= student.StudentID %>" target="_blank">View Certificate</a>
+                    <% } else { %>
+                        <% if (student.Status === 'Approved') { %>
+                            Not Uploaded
+                        <% } else { %>
+                            -
+                        <% } %>
+                    <% } %>
+                </td>
                 <td>
                     <% if (student.Status === 'Approved') { %>
                         <a href="/capture-pdf/<%= student.StudentID %>">Download NOC</a>
