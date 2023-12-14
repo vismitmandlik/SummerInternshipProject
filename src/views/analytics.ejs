@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="icon" href="../public/img/favicon.jpg" type="image/png">
+    <title>Analytics | Report</title>
+    <link rel="stylesheet" type="text/css" href="../public/css/style4.css">
+    <script>
+        function customSort(a, b) {
+            const studentIdA = a.getAttribute('data-studentid');
+            const studentIdB = b.getAttribute('data-studentid');
+            return studentIdA.localeCompare(studentIdB);
+        }
+
+    
+        function filterTable() {
+            const table = document.getElementById('student-table');
+            const rows = Array.from(table.querySelectorAll('tr'));
+            const select = document.getElementById('filter-select');
+            const selectedOption = select.options[select.selectedIndex].value.toLowerCase();
+
+            console.log('Selected Option:', selectedOption);
+
+            rows.forEach((row) => {
+            const statusCell = row.querySelector('td:last-child');
+            if (statusCell) {
+                const statusText = statusCell.textContent.toLowerCase();
+                if (selectedOption === 'all' || statusText === selectedOption) {
+                    row.style.display = 'table-row';
+                } else {
+                    row.style.display = 'none';
+                }
+            }
+        });
+            // Sorting the rows by custom order
+            rows.sort(customSort);
+            
+            // Rebuild the table with sorted rows
+            const tbody = table.querySelector('tbody');
+            rows.forEach((row) => {
+                tbody.appendChild(row);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="navbarr">
+        <img class="charusat-logo" src="/public/img/image-2.png" />
+        <div class="download-section">
+            <form action="/generate/report" method="post">
+                <label>Generate Report:</label>
+                <select name="format">
+                    <option value="excel">Excel (XLSX)</option>
+                    <option value="pdf">PDF</option>
+                </select>
+                <button type="submit">Download</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="content">
+        <h1 align="center">Students List</h1>
+        <label for="filter-select">Filter by Status:</label>
+        <select id="filter-select" onchange="filterTable()">
+            <option value="all">All</option>
+            <option value="approved">Approved</option>
+            <option value="rejected">Rejected</option>
+            <option value="pending">Pending</option>
+        </select>
+        <table id="student-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>View</th>
+                <th>Status</th>
+            </tr>
+            </thead>
+            <tbody>
+                <% students.forEach((student) => { %>
+                    <tr data-studentid="<%= student.StudentID %>">
+                        <td><%= student.StudentID %></td>
+                        <td><%= student.StudentName %></td>
+                        <td>
+                            <a href="/viewdetails?StudentID=<%= student.StudentID %>">View</a>
+                        </td>
+                        <td id="status-<%= student.StudentID %>"><%= student.Status %></td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

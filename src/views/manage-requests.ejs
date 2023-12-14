@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Requests</title>
+    <link rel="icon" href="../public/img/favicon.jpg" type="image/png">
+    <link rel="stylesheet" type="text/css" href="../public/css/style4.css">
+</head>
+<body>
+    <div class="navbarr">
+        <img class="charusat-logo" src="../public/img/image-2.png" />
+        <div class="Home-nav">
+            <a href="/admin-dashboard">
+                <img src="../public/img/home.png" alt="Home">
+            </a>
+        </div>
+    </div>
+    <h1 align="center">Student Internship Details</h1>
+    
+    <!-- Search bar -->
+    <form action="/search-students" method="get">
+        <input type="text" name="query" placeholder="Search Students">
+        <button type="submit" class="btn">Search</button>
+    </form>
+    
+    
+    <table id="student-table">
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>View</th>
+            <th>Status</th>
+            <th>Download NOC</th>
+        </tr>
+        <% students.forEach((student) => { %>
+            <tr>
+                <td><%= student.StudentID %></td>
+                <td><%= student.StudentName %></td>
+                <td>
+                    <a href="/viewdetails?StudentID=<%= student.StudentID %>">View</a>
+                </td>
+                <td id="status-<%= student.StudentID %>"><%= student.Status %></td>
+                <td>
+                    <% if (student.Status === 'Approved') { %>
+                        <a href="/capture-pdf/<%= student.StudentID %>">Download NOC</a>
+                    <% } else { %>
+                        Not Applicable
+                    <% } %>
+                </td>
+            </tr>
+        <% }); %>
+    </table>
+    <div id="pagination-container">
+        <a href="/manage-requests?page=<%= currentPage - 1 %>" id="prev-button" <% if (currentPage <= 1) { %>disabled<% } %>>Previous</a>
+        <span id="page-number"><%= currentPage %></span>
+        <a href="/manage-requests?page=<%= currentPage + 1 %>" id="next-button" <% if (currentPage >= totalPages) { %>disabled<% } %>>Next</a>
+    </div>
+    
+    <script>
+        // Define a function to escape special characters in a string to avoid syntax errors
+        function ejs_escapeXML(text) {
+            if (typeof text !== 'string') return text;
+            return text.replace(/[<>"&]/g, function (match) {
+                if (match === '<') return '&lt;';
+                if (match === '>') return '&gt;';
+                if (match === '"') return '&quot;';
+                if (match === '&') return '&amp;';
+            });
+        }
+
+        const students = <%- JSON.stringify(students) %>;
+        let entriesPerPage = 20;
+        let currentPage = <%- currentPage %>;
+        let totalPages = Math.ceil(students.length / entriesPerPage);
+
+        function updateTable(filteredStudents) {
+            const studentTable = document.getElementById("student-table");
+            const prevButton = document.getElementById("prev-button");
+            const nextButton = document.getElementById("next-button");
+            const pageNumber = document.getElementById("page-number");
+
+            // Clear the table
+            while (studentTable.rows.length > 1) {
+                studentTable.deleteRow(1);
+            }
+
+            // Update the table with filtered data or all students
+            const studentsToDisplay = filteredStudents || students;
+
+            studentsToDisplay.forEach((student) => {
+                const row = studentTable.insertRow();
+                row.insertCell(0).textContent = student.StudentID;
+                row.insertCell(1).textContent = student.StudentName;
+                const viewCell = row.insertCell(2);
+                const viewLink = document.createElement("a");
+                viewLink.textContent = "View";
+                viewLink.href = "/viewdetails?StudentID=" + student.StudentID;
+                viewCell.appendChild(viewLink);
+                const statusCell = row.insertCell(3);
+                statusCell.id = "status-" + student.StudentID;
+                statusCell.textContent = student.Status;
+                const nocCell = row.insertCell(4);
+                if (student.Status === 'Approved') {
+                    const nocLink = document.createElement("a");
+                    nocLink.textContent = "Download NOC";
+                    nocLink.href = "/capture-pdf/" + student.StudentID;
+                    nocCell.appendChild(nocLink);
+                } else {
+                    nocCell.textContent = "Not Applicable";
+                }
+            });
+
+            pageNumber.textContent = currentPage;
+            prevButton.disabled = currentPage <= 1;
+            nextButton.disabled = currentPage >= totalPages;
+        }
+
+        // Initialize the page when it loads
+        document.addEventListener("DOMContentLoaded", function () {
+            currentPage = parseInt(<%= currentPage %>);
+            updateTable();
+        });
+
+        // Update the event listener to use the correct IDs
+        document.getElementById("searchStudentButton").addEventListener("click", searchStudent);
+
+        function searchStudent() {
+            // Get the search query from the input field
+            const searchQuery = document.getElementById("searchStudentInput").value;
+            const filteredStudents = students.filter(student => student.StudentID.includes(searchQuery));
+            currentPage = 1;
+            totalPages = Math.ceil(filteredStudents.length / entriesPerPage);
+            updateTable(filteredStudents);
+        
+
+        const searchQuery = document.getElementById("searchStudentInput").value;
+        fetch(`/manage-requests/search?query=${searchQuery}`)
+                .then((response) => response.json())
+                .then((data) => {
+                    // Update the content of the student table and pagination
+                    updateTable(data.students);
+                })
+                .catch((error) => {
+                    console.error("Error searching students:", error);
+                });
+
+        }
+    </script>
+</body>
+</html>

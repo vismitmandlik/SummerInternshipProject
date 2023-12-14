@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Internship Confirmation Form</title>
+    <link rel="icon" href="../public/img/favicon.jpg" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/css/style3.css">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+
+<body>
+
+    <div class="navbarr">
+        <img class="charusat-logo" src="/public/img/image-2.png" />
+        <div class="Home-nav">
+            <a href="/student-dashboard">
+                <img src="/public/img/home.png" alt="Home">
+            </a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Internship Completion Certificate</h2>
+        <form action="/certification/upload-certificate/" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="StudentId">StudentId</label>
+                <input type="text" id="StudentId" name="StudentId" required>
+            </div>
+
+            <div class="form-group">
+                <label for="certificate">Upload Certificate:</label>
+                <input type="file" class="form-control-file" id="certificate" name="certificate" accept=".pdf">
+            </div>
+
+            <button type="submit" class="btn btn-primary">Upload Certificate</button>
+        </form>
+
+        <!-- Add the Preview Certificate button -->
+        <div class="form-group">
+            <label>Preview Certificate:</label>
+            <button onclick="previewCertificate()">Preview</button>
+        </div>
+
+        <!-- Container to display the preview -->
+        <div id="certificatePreviewContainer"></div>
+    </div>
+
+    <!-- Script to handle preview functionality -->
+    <script>
+       
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const formData = new FormData(form);
+
+                try {
+                    const response = await fetch('/certification/upload-certificate/', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const data = await response.json();
+                    if (response.ok) {
+                        alert(data.message); // Display success message
+                        window.location.href = '/certification/completion-certificate/'; // Replace with your desired page URL
+                    } else {
+                        throw new Error(data.error || 'Upload failed');
+                    }
+                } catch (error) {
+                    console.error(error);
+                    alert('An error occurred during upload');
+                }
+            });
+        });
+
+        function previewCertificate() {
+            const studentId = document.getElementById('StudentId').value;
+            const previewContainer = document.getElementById('certificatePreviewContainer');
+
+            // Fetch the certificate preview using fetch or AJAX
+            fetch(`/certification/certificate-preview/${studentId}`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.blob();
+                    }
+                    throw new Error('Certificate not found');
+                })
+                .then(blob => {
+                    const url = URL.createObjectURL(blob);
+                    const preview = document.createElement('iframe');
+                    preview.setAttribute('src', url);
+                    preview.style.width = '100%';
+                    preview.style.height = '500px';
+                    previewContainer.innerHTML = '';
+                    previewContainer.appendChild(preview);
+                })
+                .catch(error => {
+                    previewContainer.innerHTML = `<p>${error.message}</p>`;
+                });
+        }
+    </script>
+</body>
+
+</html>

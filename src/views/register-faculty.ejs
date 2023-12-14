@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin-Dashboard</title>
+    <link rel="icon" href="../public/img/favicon.jpg" type="image/png">
+    <link rel="stylesheet" type="text/css" href="/public/css/style6.css" />
+    <!-- Font Awesome Cdn Link -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <script src="/public/scripts/script.js"></script>
+</head>
+
+<body>
+    <div class="navbarr">
+        <img class="charusat-logo" src="../public/img/image-2.png" />
+        <div class="Home-nav">
+            <a href="/admin-dashboard">
+                <img src="../public/img/home.png" alt="Home">
+            </a>
+        </div>
+    </div>
+    <div class="container">
+        <nav>
+            <ul>
+                <!-- ... Your existing navigation ... -->
+            </ul>
+        </nav>
+
+        <section class="main">
+            <div class="main-top">
+                <h1>Home</h1>
+                <i class="fas fa-user-cog"></i>
+            </div>
+            <div class="main-skills">
+                <!-- Add a form for faculty registration -->
+                <form action="/register-faculty" method="post">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Password</label>
+                        <input type="text" id="password" name="password" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="role">Role</label>
+                        <select id="role" name="role" required>
+                            <option value="faculty">Faculty</option>
+                            <!-- You can add more roles if needed -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <button type="submit">Register Faculty</button>
+                    </div>
+                </form>
+                <!-- ... Your existing content ... -->
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>
