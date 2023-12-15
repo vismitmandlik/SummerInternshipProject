@@ -7,8 +7,6 @@ const { Product, User } = require('../models/product');
 const storage = multer.memoryStorage(); // Use memory storage for storing files as buffers
 const upload = multer({ storage: storage });
 
-
-router.use('/public/css', express.static(__dirname + '/public/css'));
 // Render the certification page
 router.get('/completion-certificate/', async (req, res) => {
     const StudentId = req.query.StudentId;  // Use req.query to get query parameters
