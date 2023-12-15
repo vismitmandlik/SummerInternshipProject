@@ -23,6 +23,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use('/public/css', express.static(__dirname + '/public/css'));
 app.use('/public/scripts', express.static(__dirname + '/public/scripts'));
 app.use('/public/img', express.static(__dirname + '/public/img'));
+app.use('/public/img', express.static(__dirname + '/public/img'));
 
 app.use(expressSession({ secret: 'your-secret-key', resave: true, saveUninitialized: true }));
 app.use(passport.initialize());
