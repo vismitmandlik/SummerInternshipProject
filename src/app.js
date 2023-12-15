@@ -19,7 +19,7 @@ app.set("view engine", "ejs");
 app.set("views", __dirname + "/views");
 app.set('views', path.join(__dirname, 'views'));
 
-
+app.use(express.static(__dirname + "/public/"));
 app.use('/public/css', express.static(__dirname + '/public/css'));
 app.use('/public/scripts', express.static(__dirname + '/public/scripts'));
 app.use('/public/img', express.static(__dirname + '/public/img'));
