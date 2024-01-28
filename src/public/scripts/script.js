@@ -36,3 +36,6 @@ function fetchStudentData(callback) {
     });
 }
 
+function alertMessage(){
+    window.alert('Are you sure you want to log out?')
+}
