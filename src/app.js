@@ -1,11 +1,11 @@
 require('dotenv').config();
+require('ejs');
 const express = require('express');
 const app = express();
 const connectDB = require('./db/connect');
 const mongoose = require('mongoose');
-const ejs = require('ejs');
 const path = require('path');
-const { Product } = require('./models/product');
+const { ProductModel } = require('./models');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
 const puppeteer = require('puppeteer');
@@ -93,9 +93,7 @@ app.get('/render/:StudentID', async (req, res) => {
     const { StudentID } = req.params;
 
     // Fetch the latest student from the database
-    const student = await Product.findOne({ StudentID });
-    console.log(student);
-
+    const student = await ProductModel.findOne({ StudentID });
     // Check if a student was found
     if (!student) {
       return res
@@ -147,8 +145,7 @@ app.get('/capture-pdf/:StudentID', async (req, res) => {
 // Confirmation Page
 app.get('/confirmation-form', async (req, res) => {
   try {
-    const Product = mongoose.model('Product');
-    const data = await Product.findOne().lean().sort({
+    const data = await ProductModel.findOne().lean().sort({
       StudentID: -1
     }); // Fetch data from the database
     res.render('confirmation-form', {
@@ -163,8 +160,7 @@ app.get('/confirmation-form', async (req, res) => {
 // Approval Form
 app.get('/approval-form', async (req, res) => {
   try {
-    const Product = mongoose.model('Product');
-    const data = await Product.findOne().lean().sort({
+    const data = await ProductModel.findOne().lean().sort({
       StudentID: -1
     }); // Fetch data from the database
     res.render('approval-form', {
@@ -179,8 +175,7 @@ app.get('/approval-form', async (req, res) => {
 // Define a route to fetch students
 app.get('/get-students', async (req, res) => {
   try {
-    const Product = mongoose.model('Product');
-    const students = await Product.find().sort({
+    const students = await ProductModel.find().sort({
       StudentID: -1
     });
     res.json(students);
@@ -195,14 +190,13 @@ app.get('/get-students', async (req, res) => {
 // Manage Requests Route
 app.get('/manage-requests', async (req, res) => {
   try {
-    const Product = mongoose.model('Product');
     const studentsPerPage = 10; // Set the number of students per page
     const currentPage = parseInt(req.query.page) || 1; // Get the current page from the query parameters, default to page 1
 
-    const totalStudents = await Product.countDocuments();
+    const totalStudents = await ProductModel.countDocuments();
     const totalPages = Math.ceil(totalStudents / studentsPerPage);
 
-    const students = await Product.find()
+    const students = await ProductModel.find()
       .skip((currentPage - 1) * studentsPerPage)
       .limit(studentsPerPage)
       .sort({
@@ -229,7 +223,7 @@ app.get('/search-students', async (req, res) => {
     // Check if a search query is provided
     if (query) {
       // Search for students that match the query in the entire database
-      const students = await Product.find({
+      const students = await ProductModel.find({
         $or: [
           { StudentID: { $regex: query, $options: 'i' } }, // Match StudentID (case-insensitive)
           { StudentName: { $regex: query, $options: 'i' } } // Match StudentName (case-insensitive)
@@ -239,7 +233,7 @@ app.get('/search-students', async (req, res) => {
       const studentsPerPage = 10; // Set the number of students per page
       const currentPage = parseInt(req.query.page) || 1; // Get the current page from the query parameters, default to page 1
 
-      const totalStudents = await Product.countDocuments();
+      const totalStudents = await ProductModel.countDocuments();
       const totalPages = Math.ceil(totalStudents / studentsPerPage);
 
       return res.render('manage-requests', {
@@ -248,7 +242,7 @@ app.get('/search-students', async (req, res) => {
         totalPages
       });
     } else {
-      const students = await Product.find({
+      const students = await ProductModel.find({
         $or: [
           { StudentID: { $regex: query, $options: 'i' } }, // Match StudentID (case-insensitive)
           { StudentName: { $regex: query, $options: 'i' } } // Match StudentName (case-insensitive)
@@ -258,7 +252,7 @@ app.get('/search-students', async (req, res) => {
       const studentsPerPage = 10; // Set the number of students per page
       const currentPage = parseInt(req.query.page) || 1; // Get the current page from the query parameters, default to page 1
 
-      const totalStudents = await Product.countDocuments();
+      const totalStudents = await ProductModel.countDocuments();
       const totalPages = Math.ceil(totalStudents / studentsPerPage);
       return res.render('manage-requests', {
         students,
@@ -324,7 +318,7 @@ app.post('/form', async (req, res) => {
       Status: Status
     };
 
-    const existingStudent = await Product.findOne({
+    const existingStudent = await ProductModel.findOne({
       StudentID: data.StudentID
     });
     if (existingStudent) {
@@ -365,11 +359,10 @@ app.post('/form', async (req, res) => {
 // Add this route to your existing app.js
 app.get('/viewdetails', async (req, res) => {
   try {
-    const Product = mongoose.model('Product');
     const studentID = req.query.StudentID; // Get StudentID from the query parameter
 
     // Fetch the details of the specific student using the StudentID
-    const student = await Product.findOne({
+    const student = await ProductModel.findOne({
       StudentID: studentID
     }).lean();
 
@@ -392,10 +385,8 @@ app.post('/update-status', async (req, res) => {
   const { studentID, newStatus } = req.body;
 
   try {
-    const Product = mongoose.model('Product');
-
     // Update the status in the database
-    await Product.updateOne(
+    await ProductModel.updateOne(
       {
         StudentID: studentID
       },
@@ -414,7 +405,7 @@ app.post('/update-status', async (req, res) => {
 
 // Define a route for rendering the student list
 app.get('/analytics', async (req, res) => {
-  const students = await Product.find().exec();
+  const students = await ProductModel.find().exec();
   res.render('analytics', {
     students
   });

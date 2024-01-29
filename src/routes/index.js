@@ -1,13 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
-const { Product, User } = require('../models/product');
+const { ProductModel, UserModel } = require('../models');
 
 // Home Route
 router.get('/', async (req, res) => {
   try {
-    const Product = mongoose.model('Product');
-    const data = await Product.find().sort({
+    const data = await ProductModel.find().sort({
       StudentID: -1
     }); // Sort by StudentID
 
@@ -25,7 +23,7 @@ router.get('/', async (req, res) => {
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body; // Assuming "username" is the StudentID
-    const data = await User.findOne({ username: username });
+    const data = await UserModel.findOne({ username: username });
 
     // check for faculty
     if (data.role == 'faculty' && data.password == password) {
@@ -34,7 +32,7 @@ router.post('/login', async (req, res) => {
 
     // check for student
     else if (data && data.password == password) {
-      const student = await Product.findOne({
+      const student = await ProductModel.findOne({
         StudentID: username
       }).lean();
       res.render('student-dashboard', { student: student, username: username });

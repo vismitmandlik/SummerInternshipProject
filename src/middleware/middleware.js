@@ -1,19 +1,17 @@
-const {User} = require("../models/product")
+const { UserModel, UserRole } = require('../models');
 
+const isAdmin = async (username) => {
+  // const {username,password}=req.body
 
-const isAdmin=async(username)=>{
-    // const {username,password}=req.body
+  const user = await UserModel.findOne({ username: username });
 
-    const user=await User.findOne({username:username})
+  if (user.role == UserRole.FACULTY) {
+    // res.redirect("/admin-dashboard")
+    return true;
+  } else {
+    // res.redirect("/")
+    return false;
+  }
+};
 
-    if( user.role=="faculty"){
-        // res.redirect("/admin-dashboard")
-        return true
-    }
-    else{
-        // res.redirect("/")
-        return false;
-    }
-}
-
-module.exports=isAdmin
+module.exports = isAdmin;

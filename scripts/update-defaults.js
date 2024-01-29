@@ -1,11 +1,14 @@
 const fs = require('fs');
 const mongoose = require('mongoose');
-const Product = require('./models/product');
+const { ProductModel } = require('./models');
 
-mongoose.connect('mongodb+srv://vismit:VismitMongodb@vismitapi.sbdfoxz.mongodb.net/VismitAPI?retryWrites=true&w=majority', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose.connect(
+  'mongodb+srv://vismit:VismitMongodb@vismitapi.sbdfoxz.mongodb.net/VismitAPI?retryWrites=true&w=majority',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }
+);
 
 const batchSize = 100; // Define your batch size
 let processedRecords = 0;
@@ -26,7 +29,7 @@ const updateRecord = async (record) => {
   }
 
   try {
-    await Product.updateOne({ StudentID: record.StudentID }, record);
+    await ProductModel.updateOne({ StudentID: record.StudentID }, record);
     processedRecords++;
   } catch (error) {
     console.error('Error updating record:', error);
@@ -52,7 +55,10 @@ const updateDatabaseFromJson = async () => {
     const totalRecords = jsonData.length;
 
     while (processedRecords < totalRecords) {
-      const recordsToUpdate = jsonData.slice(processedRecords, processedRecords + batchSize);
+      const recordsToUpdate = jsonData.slice(
+        processedRecords,
+        processedRecords + batchSize
+      );
       await updateDatabaseBatch(recordsToUpdate);
     }
 

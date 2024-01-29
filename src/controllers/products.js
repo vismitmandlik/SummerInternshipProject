@@ -1,7 +1,5 @@
-// const Product = require("../models/product");
-
 // const getAllProducts = async (req, res) => {
-//   const myData = await Product.find(req.query).sort({ StudentID: 1 });
+//   const myData = await ProductModel.find(req.query).sort({ StudentID: 1 });
 //   res.status(200).json({ myData });
 // };
 
@@ -34,7 +32,7 @@
 //     }
 //   }
 
-//   const filteredData = await Product.find(filterOptions);
+//   const filteredData = await ProductModel.find(filterOptions);
 //   res.status(200).json({ Data: filteredData });
 // };
 
