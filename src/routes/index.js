@@ -7,12 +7,8 @@ router.get('/', async (req, res) => {
   try {
     const data = await ProductModel.find().sort({
       StudentID: -1
-    }); // Sort by StudentID
-
-    // Render the EJS template with the data
-    res.render('login', {
-      data
     });
+    res.render('login', { data });
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error at get /');
@@ -22,7 +18,7 @@ router.get('/', async (req, res) => {
 // login route
 router.post('/login', async (req, res) => {
   try {
-    const { username, password } = req.body; // Assuming "username" is the StudentID
+    const { username, password } = req.body; 
     const data = await UserModel.findOne({ username: username });
 
     // check for faculty
@@ -36,7 +32,6 @@ router.post('/login', async (req, res) => {
         StudentID: username
       }).lean();
       res.render('student-dashboard', { student: student, username: username });
-      // res.render('student-dashboard', { username: username });
     }
 
     // User not found

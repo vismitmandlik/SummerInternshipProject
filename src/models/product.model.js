@@ -7,86 +7,69 @@ const productSchema = new Schema({
   StudentID: {
     type: String,
     required: true,
-    unique: true, // Ensure uniqueness of StudentID
-    index: true, // Create an index on StudentID
-    // TODO: Remove default
-    default: 'Not Provided'
+    unique: true,
+    index: true
   },
   StudentName: {
-    type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    type: String
   },
   TypeofInternship: {
-    type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    type: String
   },
   Counsellor_InternalGuide: {
-    type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    type: String
   },
   CompanyName: {
-    type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    type: String
   },
   CompanyAddress: {
-    type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    type: String
   },
   CompanyCity: {
-    type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    type: String
   },
   CompanyState: {
-    type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    type: String
   },
   HRemailID: {
-    type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    type: String
   },
   HRphonenumber: {
-    type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    type: String
   },
   TypeofProject: {
-    type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    type: String
   },
   ProjectTitle: {
-    type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    type: String
   },
   ToolsandTechnology: {
-    type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    type: String
   },
   Status: {
     type: String,
-    default: 'Pending' // Default value of "Not Provided"
+    default: 'Pending'
   },
   Semester: {
     type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    default: 'Not Provided'
   },
   Duration: {
     type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    default: 'Not Provided'
   },
   StartDate: {
     type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    default: 'Not Provided'
   },
   EndDate: {
     type: String,
-    default: 'Not Provided' // Default value of "Not Provided"
+    default: 'Not Provided'
   },
-  // Link the product schema with the user schema
   user: {
     type: Schema.Types.ObjectId,
     ref: USERS_COLLECTION_NAME
   },
-
-  // field for the certificate file
   certificate: {
     type: Buffer
   }

@@ -4,12 +4,12 @@ const multer = require('multer');
 const { ProductModel } = require('../models/product.model');
 
 // Set up multer for file uploads
-const storage = multer.memoryStorage(); // Use memory storage for storing files as buffers
+const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
 // Render the certification page
 router.get('/completion-certificate/', async (req, res) => {
-  const StudentId = req.query.StudentId; // Use req.query to get query parameters
+  const StudentId = req.query.StudentId;
   const student = await ProductModel.findOne({ StudentId: StudentId });
   res.render('completion-certificate', { StudentId });
 });
@@ -20,7 +20,7 @@ router.post(
   upload.single('certificate'),
   async (req, res) => {
     try {
-      const StudentId = req.body.StudentId; // Use req.body to get data from the request body
+      const StudentId = req.body.StudentId; 
       const student = await ProductModel.findOne({ StudentID: StudentId });
       console.log(student);
       if (!student) {
@@ -46,7 +46,6 @@ router.post(
 router.get('/upload-certificate/', async (req, res) => {
   try {
     const StudentId = req.body.StudentId;
-    // Fetch student data from your database
     const student = await ProductModel.findOne({ StudentID: StudentId });
 
     if (!student) {
@@ -70,7 +69,6 @@ router.get('/certificate-preview/:StudentId', async (req, res) => {
       return res.status(404).json({ error: 'Certificate not foun' });
     }
 
-    // Set appropriate content type based on the certificate file type (e.g., image/jpeg, application/pdf, etc.)
     res.set('Content-Type', 'application/pdf');
     res.send(student.certificate);
   } catch (error) {

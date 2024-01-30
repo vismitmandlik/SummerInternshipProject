@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
 const { ProductModel, UserModel } = require('../models');
 
 router.get('/', async (req, res) => {
@@ -8,13 +7,9 @@ router.get('/', async (req, res) => {
     const data = await ProductModel.findOne().lean().sort({
       StudentID: -1
     });
-    if (true) {
-      res.render('register-faculty', {
-        data
-      });
-    } else {
-      res.redirect('admin-dashboard');
-    }
+    res.render('register-faculty', {
+      data
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error at .get/register-faculty');
