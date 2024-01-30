@@ -6,8 +6,7 @@
   "scripts": {
     "start": "node ./src/app.js",
     "dev": "nodemon ./src/app.js",
-    "lint": "prettier . --write",
-    "vercel-build": "echo-hello"
+    "lint": "prettier . --write"
   },
   "keywords": [],
   "author": "",
