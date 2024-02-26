@@ -86,7 +86,13 @@
 
         <div class="form-group-duration">
           <label for="duration">Duration: </label>
-          <input type="month" id="duration" name="duration" />
+          <input
+            type="number"
+            id="duration"
+            name="duration"
+            placeholder="months"
+            readonly
+          />
           <label for="startDate">Start Date:</label>
           <input type="date" id="startDate" name="startDate" />
           <label for="endDate">End Date:</label>
@@ -127,5 +133,22 @@
         </div>
       </form>
     </div>
+    <script>
+      $(document).ready(function () {
+        $('#startDate, #endDate').on('change', function () {
+          var startDate = new Date($('#startDate').val());
+          var endDate = new Date($('#endDate').val());
+          if (startDate && endDate && startDate <= endDate) {
+            var diffMonths =
+              (endDate.getFullYear() - startDate.getFullYear()) * 12;
+            diffMonths -= startDate.getMonth();
+            diffMonths += endDate.getMonth();
+            $('#duration').val(diffMonths);
+          } else {
+            $('#duration').val('');
+          }
+        });
+      });
+    </script>
   </body>
 </html>
