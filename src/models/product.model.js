@@ -55,15 +55,15 @@ const productSchema = new Schema({
     default: 'Not Provided'
   },
   Duration: {
-    type: String,
+    type: Number,
     default: 'Not Provided'
   },
   StartDate: {
-    type: String,
+    type: Date,
     default: 'Not Provided'
   },
   EndDate: {
-    type: String,
+    type: Date,
     default: 'Not Provided'
   },
   user: {
