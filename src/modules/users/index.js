@@ -1,7 +1,5 @@
-const UserSchemaExports = require('./user.schema');
-const UsersEnumExports = require('./users.enum');
-
 module.exports = {
-  ...UserSchemaExports,
-  ...UsersEnumExports,
+  ...require('./user.schema'),
+  ...require('./users.enum'),
+  ...require('./users.service'),
 };

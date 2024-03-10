@@ -15,7 +15,7 @@ const userSchema = new Schema(
         function () {
           this.role === UserRole.STUDENT;
         },
-        `enrollmentNumber is required when roll is ${UserRole.STUDENT}`,
+        `{PATH} is required when roll is ${UserRole.STUDENT}`,
       ],
     },
     role: {
