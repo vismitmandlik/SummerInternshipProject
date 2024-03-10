@@ -1,40 +1,47 @@
 const express = require('express');
 const router = express.Router();
-const { User } = require("../models/product");
+const { UserModel } = require('../models/user.model');
 
-router.get("/change-password", async (req, res) => {
-    try {
-        res.render("change-password");
-    } catch (error) {
-        console.error(error);
-        res.status(500).send("Internal Server Error at /change-password");
-    }
+router.get('/', async (req, res) => {
+  try {
+    res.render('change-password');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error at /change-password');
+  }
 });
 
-router.post("/change-password", async (req, res) => {
-    try {
-        const { username, password, newPassword, confirmNewPassword } = req.body;
-        if (newPassword !== confirmNewPassword) {
-            return res.status(400).send('<script>alert("New passwords do not match"); window.location="/change-password";</script>');
-        }
-        const user = await User.findOne({ username });
-        if (!user) {
-            return res.status(404).send('<script>alert("User not found"); window.location="/change-password";</script>');
-        }
-        console.log("Found user:", user);
-        if (password != user.password) {
-            return res.status(401).send('<script>alert("Invalid current password"); window.location="/change-password";</script>');
-        }
-
-        user.password = newPassword; 
-        await user.save(); 
-        console.log(newPassword)
-
-        res.send(`<script>alert("Password changed successfully! Login with NEW Password."); window.location="/";</script>`);
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('<script>alert("Internal server error"); window.location="/change-password";</script>');
+router.post('/', async (req, res) => {
+  try {
+    const { username, password, newPassword } = req.body;
+    console.log()
+    // if (newPassword !== confirmNewPassword) {
+    //   return res.status(400).json({ error: 'New passwords do not match' });
+    // }
+    const user = await UserModel.findOne({ username : username }, { password: 1 });
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
     }
+    console.log('Found user:', user);
+    if (password != user.password) {
+      return res.status(401).json({ error: 'Invalid current password' });
+    }
+    user.password = newPassword;
+    await user.save();
+    console.log(newPassword);
+    res.json({
+      success: true,
+      message: 'Password changed successfully! Login with NEW Password.'
+    });
+  } catch (error) {
+    console.error(error);
+    if (error.name === 'ValidationError') {
+      return res
+        .status(400)
+        .json({ error: `Validation error: ${error.message}` });
+    }
+    res.status(500).json({ error: 'Internal server error' });
+  }
 });
 
 module.exports = router;

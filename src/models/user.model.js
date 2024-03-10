@@ -9,16 +9,19 @@ const UserRole = Object.freeze({
   STUDENT: 'STUDENT'
 });
 
-const userSchema = new Schema({
-  username: String,
-  password: String,
-  role: {
-    type: String,
-    required: true,
-    default: UserRole.STUDENT,
-    enum: Object.values(UserRole)
-  }
-});
+const userSchema = new Schema(
+  {
+    username: String,
+    password: String,
+    role: {
+      type: String,
+      required: true,
+      default: UserRole.STUDENT,
+      enum: Object.values(UserRole)
+    }
+  },
+  { timestamps: true }
+);
 
 userSchema.plugin(passportLocalMongoose);
 

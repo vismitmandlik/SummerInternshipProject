@@ -7,7 +7,7 @@ function Confirmation() {
 }
 
 function Approval() {
-  window.location.href = '/manage-requests'; // Change the URL to the route for approved.ejs
+  window.location.href = '/handle-requests'; // Change the URL to the route for approved.ejs
 }
 
 function approval_form() {

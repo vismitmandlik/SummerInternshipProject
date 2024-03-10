@@ -83,6 +83,7 @@ app.use('/student-dashboard', require('./routes/studentRoutes'));
 app.use('/admin-dashboard', require('./routes/adminRoutes'));
 app.use('/certification', require('./routes/certificateRoutes'));
 app.use('/generate/', require('./routes/reportGenerationRoutes'));
+app.use('/change-password', require('./routes/change-password'))
 
 // For NOC generation
 // Define a route to render your EJS template
@@ -187,8 +188,8 @@ app.get('/get-students', async (req, res) => {
   }
 });
 
-// Manage Requests Route
-app.get('/manage-requests', async (req, res) => {
+// analytics Route
+app.get('/analytics', async (req, res) => {
   try {
     const studentsPerPage = 10; // Set the number of students per page
     const currentPage = parseInt(req.query.page) || 1; // Get the current page from the query parameters, default to page 1
@@ -201,10 +202,10 @@ app.get('/manage-requests', async (req, res) => {
       .limit(studentsPerPage)
       .sort({
         StudentID: -1
-      }) // Sort by StudentID in descending order
-      .lean(); // Fetch students for the current page
+      }) 
+      .lean(); 
 
-    res.render('manage-requests', {
+    res.render('analytics', {
       students,
       currentPage,
       totalPages
@@ -236,7 +237,7 @@ app.get('/search-students', async (req, res) => {
       const totalStudents = await ProductModel.countDocuments();
       const totalPages = Math.ceil(totalStudents / studentsPerPage);
 
-      return res.render('manage-requests', {
+      return res.render('analytics', {
         students,
         currentPage,
         totalPages
@@ -254,7 +255,7 @@ app.get('/search-students', async (req, res) => {
 
       const totalStudents = await ProductModel.countDocuments();
       const totalPages = Math.ceil(totalStudents / studentsPerPage);
-      return res.render('manage-requests', {
+      return res.render('analytics', {
         students,
         currentPage,
         totalPages
@@ -396,7 +397,7 @@ app.post('/update-status', async (req, res) => {
     );
 
     // Respond with a success message (you can customize this)
-    res.redirect('/manage-requests');
+    res.redirect('/analytics');
   } catch (error) {
     console.error('Error updating status:', error);
     res.status(500).send('Internal Server Error');
@@ -404,9 +405,9 @@ app.post('/update-status', async (req, res) => {
 });
 
 // Define a route for rendering the student list
-app.get('/analytics', async (req, res) => {
+app.get('/handle-requests', async (req, res) => {
   const students = await ProductModel.find().exec();
-  res.render('analytics', {
+  res.render('handle-requests', {
     students
   });
 });
