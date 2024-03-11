@@ -11,6 +11,18 @@
     />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script>
+      const internship = {
+        type: document.getElementById('TypeofInternship_InCompany').value,
+        student:{
+          fullName: document.getElementById('StudentName').value,
+          enrollmenNumber: document.getElementById('studentID').value,
+          semester: document.getElementById('semester').value
+        },
+        startedAt: document.getElementById('startDate').value,
+        endedAt: document.getElementById('endDate').value
+      };
+    </script>
   </head>
 
   <body>
@@ -30,8 +42,8 @@
           <label for="StudentID">Student ID: </label>
           <input
             type="text"
-            id="StudentID"
-            name="StudentID"
+            id="studentID"
+            name="studentID"
             maxlength="7"
             pattern="^\d{2}[cC][eE]\d{3}$"
             placeholder="Eg. 21CE001"

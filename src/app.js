@@ -282,7 +282,7 @@ app.get('/form', (req, res) => {
 app.post('/form', async (req, res) => {
   try {
     var StudentID = req.body.StudentID; // Corrected property name
-    var StudentName = req.body.StudentName;
+    var StudentName = req.body.student.name;
     var FirstName = req.body.FirstName;
     var MidName = req.body.MidName;
     var LastName = req.body.LastName;
