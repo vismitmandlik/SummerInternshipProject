@@ -4,7 +4,7 @@ const { UserRole } = require('./users.enum');
 class UsersService {
   async findStudentByEnrollmentNumber(
     enrollmentNumber,
-    projection = undefined
+    projection = undefined,
   ) {
     if (!projection || !Object.keys(projection)) {
       projection = { _id: 1 };
@@ -12,7 +12,7 @@ class UsersService {
 
     return await UserModel.findOne(
       { enrollmentNumber, role: UserRole.STUDENT },
-      projection
+      projection,
     );
   }
 
@@ -24,6 +24,6 @@ class UsersService {
   }
 }
 
-const usersService = UsersService();
+const usersService = new UsersService();
 
 module.exports = { usersService };
