@@ -23,7 +23,7 @@
                     <img class="img" alt="Image" src="/public/img/image-3.png" />
                     <form action="/login" method="post">
                         <input class="text-wrapper-3" type="text" id="username" name="username"
-                            placeholder="Enter your username or email" autocomplete="username" required>
+                            placeholder="Enter your username or email" autocomplete="username" onkeyup="this.value = this.value.toUpperCase()" required>
                         <input class="text-wrapper-2" type="password" id="password" name="password"
                             placeholder="Enter your password" autocomplete="password" required>
                         <img class="image-2" alt="Image" src="/public/img/image-4.png" />

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { internshipsService } = require('./intenrship.service');
+const { internshipsService } = require('./internship.service');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -16,14 +16,12 @@ router.post('/', async (req, res) => {
   }
 });
 
-get('/approval-form', async (req, res) => {
+router.get('/approval-form', async (req, res) => {
   try {
-    const data = await ProductModel.findOne().lean().sort({
-      StudentID: -1,
-    }); // Fetch data from the database
+    const data = await ProductModel.findOne().lean().sort({ StudentID: -1 });
     res.render('approval-form', {
       data,
-    }); // Create an EJS file for confirmation
+    });
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');

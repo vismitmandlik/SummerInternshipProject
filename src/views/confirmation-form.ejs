@@ -28,12 +28,28 @@
       <form action="/form" method="post">
         <div class="form-group">
           <label for="StudentID">Student ID:</label>
-          <input type="text" id="StudentID" name="StudentID" required />
+          <input
+            type="text"
+            id="studentID"
+            name="studentID"
+            maxlength="7"
+            pattern="^\d{2}[cC][eE]\d{3}$"
+            style="text-transform: uppercase"
+            placeholder="Eg. 21CE001"
+            autofocus
+            required
+          />
         </div>
 
         <div class="form-group">
           <label for="StudentName">Student Name:</label>
-          <input type="text" id="StudentName" name="StudentName" required />
+          <input
+            type="text"
+            id="StudentName"
+            name="StudentName"
+            style="text-transform: uppercase"
+            required
+          />
         </div>
 
         <div class="form-group">
@@ -42,7 +58,6 @@
             <option value="">Select Semester</option>
             <option value="Semester 4">Semester 4</option>
             <option value="Semester 6">Semester 6</option>
-            <!-- Add more semester options as needed -->
           </select>
         </div>
 

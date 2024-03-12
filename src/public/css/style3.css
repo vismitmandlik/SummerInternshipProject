@@ -70,7 +70,7 @@ select label {
   border-radius: 4px;
 }
 
-input[id='StudentID'],
+input[id='studentID'],
 select label {
   margin-left: 10%;
   width: 25%;
