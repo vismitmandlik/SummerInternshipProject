@@ -1,58 +1,25 @@
-require('dotenv').config();
 require('ejs');
 const express = require('express');
 const app = express();
-const connectDB = require('./db/connect');
-const mongoose = require('mongoose');
+const { connectDatabase } = require('./utils/db/mongoose/connection');
 const path = require('path');
-const { ProductModel } = require('./models');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
-const puppeteer = require('puppeteer');
 const passport = require('passport');
 const expressSession = require('express-session');
+const { serverConfigs } = require('./configs/server.config');
 require('events').EventEmitter.defaultMaxListeners = 20; // Increase the limit as needed
 
 // Set up EJS as the template engine
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
-app.set('views', path.join(__dirname, 'views'));
 
-app.use(express.static(__dirname + '/public/'));
-app.use('/public/css', express.static(__dirname + '/public/css'));
-app.use('/public/scripts', express.static(__dirname + '/public/scripts'));
-app.use('/public/img', express.static(__dirname + '/public/img'));
-app.use('/public/img', express.static(__dirname + '/public/img'));
-
-app.use(
-  expressSession({
-    secret: 'your-secret-key',
-    resave: true,
-    saveUninitialized: true,
-  })
-);
-app.use(passport.initialize());
-app.use(passport.session());
-
-var db = mongoose.connection;
-db.on('error', () => console.log('Error in Connecting to Database'));
-db.once('open', () => console.log('Connected to Database'));
-
-// PORT
-const PORT = process.env.PORT || 7000;
+app.use(express.static(__dirname + '/views'));
+app.use(express.static(__dirname + '/assets'));
 
 // Middlewares
-app.use(express.static('public'));
-app.use(
-  bodyParser.urlencoded({
-    extended: false,
-  })
-);
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 //Headers
 const headers = [
@@ -77,20 +44,29 @@ const headers = [
 // // // Routes
 
 // //  // Use routes
-app.use('/', require('./routes'));
-app.use('/register-faculty', require('./routes/authRoutes'));
-app.use('/student-dashboard', require('./routes/studentRoutes'));
-app.use('/admin-dashboard', require('./routes/adminRoutes'));
-app.use('/certification', require('./routes/certificateRoutes'));
-app.use('/generate/', require('./routes/reportGenerationRoutes'));
-app.use('/change-password', require('./routes/change-password'));
+// app.use('/', require('./routes'));
+// app.use('/register-faculty', require('./routes/authRoutes'));
+// app.use('/student-dashboard', require('./routes/studentRoutes'));
+// app.use('/admin-dashboard', require('./routes/adminRoutes'));
+// app.use('/certification', require('./routes/certificateRoutes'));
+// app.use('/generate/', require('./routes/reportGenerationRoutes'));
+// app.use('/change-password', require('./routes/change-password'));
 
 //New route structure
-app.use('/auth',require('./modules/auth/auth.route'))
-app.use('/users',require('./modules/users/users.route'))
-app.use('/internships',require('./modules/internships/internships.route'))
+app.use('/auth', require('./modules/auth/auth.route'));
+// app.use('/users',require('./modules/users/users.route'))
+// app.use('/internships',require('./modules/internships/internships.route'))
 
+app.get('/', async (req, res) => {
+  try {
+    res.render('login');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error at get /');
+  }
+});
 
+/**
 // For NOC generation
 // Define a route to render your EJS template
 
@@ -410,22 +386,12 @@ app.get('/handle-requests', async (req, res) => {
     students,
   });
 });
+*/
 
-// Custom error handling middleware
-app.get('/error', (err, req, res, next) => {
-  console.error(err);
-  res.status(500).render('error', { message: 'An error occurred' });
-});
+function main() {
+  connectDatabase();
+  app.listen(serverConfigs.port);
+  console.log(`App listening on http://localhost:${serverConfigs.port}`);
+}
 
-const start = async () => {
-  try {
-    await connectDB(process.env.MONGODB_URL);
-    app.listen(PORT, () => {
-      console.log(`Connected to port :${PORT}`);
-    });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
-start();
+main();
