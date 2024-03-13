@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -108,7 +108,7 @@
         <div class="form-group-duration">
           <label for="Duration">Duration :</label>
           <input
-            type="text"
+            type="number"
             id="Duration"
             name="Duration"
             value="<%= student.Duration %>"
@@ -129,6 +129,7 @@
             name="EndDate"
             value="<%= student.EndDate %>"
             readonly
+            class="datepicker"
           />
         </div>
 
@@ -211,6 +212,6 @@
         });
       }
     </script>
-    <!-- </div> -->
+    
   </body>
 </html>
