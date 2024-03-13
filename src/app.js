@@ -55,7 +55,7 @@ const headers = [
 //New route structure
 app.use('/auth', require('./modules/auth/auth.route'));
 // app.use('/users',require('./modules/users/users.route'))
-// app.use('/internships',require('./modules/internships/internships.route'))
+app.use('/internships',require('./modules/internships/internships.route'))
 
 app.get('/', async (req, res) => {
   try {

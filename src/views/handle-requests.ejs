@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <link rel="icon" href="../public/img/favicon.jpg" type="image/png">
+    <link rel="icon" href="/images/favicon.jpg" type="image/png">
     <title>Internship Requests</title>
-    <link rel="stylesheet" type="text/css" href="../public/css/style4.css">
+    <link rel="stylesheet" type="text/css" href="/css/style4.css">
     <script>
         function customSort(a, b) {
             const studentIdA = a.getAttribute('data-studentid');
@@ -43,7 +43,7 @@
 </head>
 <body>
     <div class="navbarr">
-        <img class="charusat-logo" src="/public/img/image-2.png" />
+        <img class="charusat-logo" src="/images/image-2.png" />
         <div class="download-section">
             <form action="/generate/report" method="post">
                 <label>Generate Report:</label>
@@ -77,12 +77,12 @@
             </tr>
             </thead>
             <tbody>
-                <% students.forEach((student) => { %>
+                <% internships.forEach((internship) => { %>
                     <tr data-studentid="<%= student.StudentID %>">
                         <td><%= student.StudentID %></td>
                         <td><%= student.StudentName %></td>
                         <td>
-                            <a href="/viewdetails?StudentID=<%= student.StudentID %>">View</a>
+                            <a href="/viewdetails?StudentID=<%= internship.student.enrollmentNumber %>">View</a>
                         </td>
                         <td id="status-<%= student.StudentID %>"><%= student.Status %></td>
                         <td>

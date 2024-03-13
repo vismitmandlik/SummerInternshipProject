@@ -46,12 +46,7 @@ router.get('/admin-dashboard', async (req, res) => {
 // Register Faculty Route
 router.get('/register-faculty', async (req, res) => {
   try {
-    const data = await ProductModel.findOne().lean().sort({
-      StudentID: -1,
-    });
-    res.render('register-faculty', {
-      data,
-    });
+    res.render('register-faculty');
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error at .get/register-faculty');

@@ -1,24 +1,24 @@
 function Location() {
-  window.location.href = '/admin-dashboard'; // Change the URL to the route that renders dashboard.ejs
+  window.location.href = '/auth/admin-dashboard';
 }
 
 function Confirmation() {
-  window.location.href = '/confirmation-form'; // Change the URL to the route for conformation_page.ejs
+  window.location.href = '/confirmation-form';
 }
 
-function Approval() {
-  window.location.href = '/handle-requests'; // Change the URL to the route for approved.ejs
+function handleRequests() {
+  window.location.href = '/internships';
 }
 
 function approval_form() {
-  window.location.href = '/approval-form'; // Change the URL to the route for approved.ejs
+  window.location.href = '/approval-form';
 }
 function RegisterFaculty() {
-  window.location.href = '/register-faculty'; // Change the URL to the route for approved.ejs
+  window.location.href = '/auth/register-faculty';
 }
 
 function certification(studentId) {
-  window.location.href = '/certification/completion-certificate/'; // Change the URL to the route for approved.ejs
+  window.location.href = '/certification/completion-certificate/';
 }
 
 // Define the function to fetch student data
@@ -32,7 +32,7 @@ function fetchStudentData(callback) {
     },
     error: function (error) {
       console.error('Error fetching student data:', error);
-    }
+    },
   });
 }
 

@@ -2,9 +2,21 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const { internshipsService } = require('./internship.service');
+const { InternshipModel } = require('./internship.schema');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+router.get('/', async (req, res) => {
+  try {
+    const internships = await InternshipModel.find()
+      .sort({ 'student.enrollmentNumber': -1 })
+      .lean();
+    return res.render('handle-requests', { internships });
+  } catch (err) {
+    console.error(err);
+  }
+});
 
 router.post('/', async (req, res) => {
   try {
@@ -48,3 +60,5 @@ router.post(
     }
   }
 );
+
+module.exports = router;
