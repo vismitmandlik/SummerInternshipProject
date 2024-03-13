@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const { ProductModel, UserModel } = require('../models');
 
-// Home Route
 router.get('/', async (req, res) => {
   try {
     res.render('login');
