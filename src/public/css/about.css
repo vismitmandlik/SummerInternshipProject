@@ -1,0 +1,143 @@
+body {
+    font-family: Arial, sans-serif;
+    margin-top: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    background: #dfe9f5;
+    overflow: hidden;
+}
+
+@media screen and (max-width: 768px) {
+    .navbarr {
+        width: 100%;
+    }
+}
+
+.navbarr .Home-nav {
+    color: rgb(211, 216, 216);
+    float: right;
+    padding: 15px 10px 15px;
+    border: 15%;
+    display: block;
+    margin-right: 25px;
+    text-align: left;
+    background-color: transparent;
+}
+
+.navbarr {
+    width: 100%;
+    height: 50px;
+    background: #16629E;
+}
+
+
+.navbarr .charusat-logo {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    left: 25px;
+    object-fit: cover;
+}
+
+
+h1{
+    text-align: center;
+}
+
+.main {
+    position: relative;
+    padding: 20px;
+    width: 100%;
+    
+}
+
+.main .card{
+    width: 25%;
+    margin: 30px;
+    height: 60%;
+    margin-left: 36%;
+    margin-bottom: 5%;
+    /* flex-shrink: 0; */
+    background: #fff;
+    text-align: center;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+}
+.main .card img{
+    width: 130px;
+    height: 130px;
+    border-radius: 100%;
+}
+.main-top {
+    display: flex;
+    width: 100%;
+}
+
+.main-top i {
+    position: absolute;
+    right: 0;
+    color: rgb(110, 109, 109);
+    cursor: pointer;
+}
+
+.main-skills {
+    display: flex;
+    margin-top: 10px;
+}
+
+.main-skills .card1 {
+    width: 25%;
+    margin: 30px;
+    height: 60%;
+    margin-left: 19%;
+    /* flex-shrink: 0; */
+    background: #fff;
+    text-align: center;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+}
+
+.main-skills .card2 {
+    width: 25%;
+    margin: 30px;
+    height: 60%;
+    margin-left: 5%;
+    /* flex-shrink: 0; */
+    background: #fff;
+    text-align: center;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+}
+
+.main-skills .card1 img{
+    width: 130px;
+    height: 130px;
+    border-radius: 100%;
+}
+.main-skills .card2 img{
+    width: 130px;
+    height: 130px;
+    border-radius: 100%;
+}
+.main-skills .card1 h3 {
+    margin: 10px;
+    text-transform: capitalize;
+    text-align: center;
+    padding-left: 5%;
+}
+.main-skills .card2 h3 {
+    margin: 10px;
+    text-transform: capitalize;
+    text-align: center;
+    padding-left: 5%;
+}
+
+.main-skills .card1 p {
+    font-size: 12px;
+}
+.main-skills .card2 p {
+    font-size: 12px;
+}
