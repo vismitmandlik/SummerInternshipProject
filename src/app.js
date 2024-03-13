@@ -83,7 +83,7 @@ app.use('/student-dashboard', require('./routes/studentRoutes'));
 app.use('/admin-dashboard', require('./routes/adminRoutes'));
 app.use('/certification', require('./routes/certificateRoutes'));
 app.use('/generate/', require('./routes/reportGenerationRoutes'));
-app.use('/', require('./routes/change-password'));
+app.use('/change-password', require('./routes/change-password'));
 app.use('/', require('./routes/about'));
 // For NOC generation
 // Define a route to render your EJS template
