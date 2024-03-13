@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { User } = require("../models/product");
 
-router.get("/change-password", async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         res.render("change-password");
     } catch (error) {
@@ -11,7 +11,7 @@ router.get("/change-password", async (req, res) => {
     }
 });
 
-router.post("/change-password", async (req, res) => {
+router.post("/", async (req, res) => {
     try {
         const { username, password, newPassword, confirmNewPassword } = req.body;
         if (newPassword !== confirmNewPassword) {
