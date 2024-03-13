@@ -85,6 +85,12 @@ app.use('/certification', require('./routes/certificateRoutes'));
 app.use('/generate/', require('./routes/reportGenerationRoutes'));
 app.use('/change-password', require('./routes/change-password'));
 
+//New route structure
+app.use('/auth',require('./modules/auth/auth.route'))
+app.use('/users',require('./modules/users/users.route'))
+app.use('/internships',require('./modules/internships/internships.route'))
+
+
 // For NOC generation
 // Define a route to render your EJS template
 
