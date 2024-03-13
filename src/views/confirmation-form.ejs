@@ -34,7 +34,7 @@
             name="studentID"
             maxlength="7"
             pattern="^\d{2}[cC][eE]\d{3}$"
-            style="text-transform: uppercase"
+            onkeyup="this.value = this.value.toUpperCase()"
             placeholder="Eg. 21CE001"
             autofocus
             required
@@ -47,7 +47,7 @@
             type="text"
             id="StudentName"
             name="StudentName"
-            style="text-transform: uppercase"
+            onkeyup="this.value = this.value.toUpperCase()"
             required
           />
         </div>
@@ -88,7 +88,14 @@
 
         <div class="form-group">
           <label for="HRphonenumber">HR Contact Number:</label>
-          <input type="text" id="HRphonenumber" name="HRphonenumber" required />
+          <input
+            type="text"
+            id="HRphonenumber"
+            name="HRphonenumber"
+            pattern="[6-9]{1}[0-9]{9}"
+            maxlength="10"
+            required
+          />
         </div>
 
         <div class="form-group-duration">
@@ -112,7 +119,7 @@
             type="radio"
             id="TypeofInternship_InCompany"
             name="TypeofInternship"
-            value="In company"
+            value="In Company"
             required
           />
           <label for="TypeofInternship_InCompany">In company</label>
@@ -120,7 +127,7 @@
             type="radio"
             id="TypeofInternship_InHouse"
             name="TypeofInternship"
-            value="In house"
+            value="In House"
           />
           <label for="TypeofInternship_InHouse">In house</label>
         </div>

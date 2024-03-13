@@ -28,7 +28,7 @@ app.use(
   expressSession({
     secret: 'your-secret-key',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
   })
 );
 app.use(passport.initialize());
@@ -45,12 +45,12 @@ const PORT = process.env.PORT || 7000;
 app.use(express.static('public'));
 app.use(
   bodyParser.urlencoded({
-    extended: false
+    extended: false,
   })
 );
 app.use(
   express.urlencoded({
-    extended: true
+    extended: true,
   })
 );
 
@@ -71,7 +71,7 @@ const headers = [
   'EndDate',
   'TypeofInternship',
   'ProjectTitle',
-  'ToolsandTechnology'
+  'ToolsandTechnology',
 ];
 
 // // // Routes
@@ -83,7 +83,7 @@ app.use('/student-dashboard', require('./routes/studentRoutes'));
 app.use('/admin-dashboard', require('./routes/adminRoutes'));
 app.use('/certification', require('./routes/certificateRoutes'));
 app.use('/generate/', require('./routes/reportGenerationRoutes'));
-app.use('/change-password', require('./routes/change-password'))
+app.use('/change-password', require('./routes/change-password'));
 
 // For NOC generation
 // Define a route to render your EJS template
@@ -117,13 +117,13 @@ app.get('/capture-pdf/:StudentID', async (req, res) => {
     const { StudentID } = req.params;
 
     const browser = await puppeteer.launch({
-      headless: true // Set to true if running on a server without a graphical interface
+      headless: true, // Set to true if running on a server without a graphical interface
     });
     const page = await browser.newPage();
 
     // Visit the route that renders the EJS template
     await page.goto(`http://localhost:${PORT}/render/${StudentID}`, {
-      waitUntil: 'domcontentloaded'
+      waitUntil: 'domcontentloaded',
     });
 
     // Capture a PDF of the page
@@ -147,10 +147,10 @@ app.get('/capture-pdf/:StudentID', async (req, res) => {
 app.get('/confirmation-form', async (req, res) => {
   try {
     const data = await ProductModel.findOne().lean().sort({
-      StudentID: -1
+      StudentID: -1,
     }); // Fetch data from the database
     res.render('confirmation-form', {
-      data
+      data,
     }); // Create an EJS file for confirmation
   } catch (error) {
     console.error(error);
@@ -162,10 +162,10 @@ app.get('/confirmation-form', async (req, res) => {
 app.get('/approval-form', async (req, res) => {
   try {
     const data = await ProductModel.findOne().lean().sort({
-      StudentID: -1
+      StudentID: -1,
     }); // Fetch data from the database
     res.render('approval-form', {
-      data
+      data,
     }); // Create an EJS file for confirmation
   } catch (error) {
     console.error(error);
@@ -177,13 +177,13 @@ app.get('/approval-form', async (req, res) => {
 app.get('/get-students', async (req, res) => {
   try {
     const students = await ProductModel.find().sort({
-      StudentID: -1
+      StudentID: -1,
     });
     res.json(students);
   } catch (error) {
     console.error(error);
     res.status(500).json({
-      error: 'Internal Server Error'
+      error: 'Internal Server Error',
     });
   }
 });
@@ -201,14 +201,14 @@ app.get('/analytics', async (req, res) => {
       .skip((currentPage - 1) * studentsPerPage)
       .limit(studentsPerPage)
       .sort({
-        StudentID: -1
-      }) 
-      .lean(); 
+        StudentID: -1,
+      })
+      .lean();
 
     res.render('analytics', {
       students,
       currentPage,
-      totalPages
+      totalPages,
     });
   } catch (error) {
     console.error(error);
@@ -227,9 +227,9 @@ app.get('/search-students', async (req, res) => {
       const students = await ProductModel.find({
         $or: [
           { StudentID: { $regex: query, $options: 'i' } }, // Match StudentID (case-insensitive)
-          { StudentName: { $regex: query, $options: 'i' } } // Match StudentName (case-insensitive)
+          { StudentName: { $regex: query, $options: 'i' } }, // Match StudentName (case-insensitive)
           // Add more fields to search if needed
-        ]
+        ],
       });
       const studentsPerPage = 10; // Set the number of students per page
       const currentPage = parseInt(req.query.page) || 1; // Get the current page from the query parameters, default to page 1
@@ -240,15 +240,15 @@ app.get('/search-students', async (req, res) => {
       return res.render('analytics', {
         students,
         currentPage,
-        totalPages
+        totalPages,
       });
     } else {
       const students = await ProductModel.find({
         $or: [
           { StudentID: { $regex: query, $options: 'i' } }, // Match StudentID (case-insensitive)
-          { StudentName: { $regex: query, $options: 'i' } } // Match StudentName (case-insensitive)
+          { StudentName: { $regex: query, $options: 'i' } }, // Match StudentName (case-insensitive)
           // Add more fields to search if needed
-        ]
+        ],
       });
       const studentsPerPage = 10; // Set the number of students per page
       const currentPage = parseInt(req.query.page) || 1; // Get the current page from the query parameters, default to page 1
@@ -258,7 +258,7 @@ app.get('/search-students', async (req, res) => {
       return res.render('analytics', {
         students,
         currentPage,
-        totalPages
+        totalPages,
       });
     }
   } catch (error) {
@@ -271,7 +271,7 @@ app.get('/search-students', async (req, res) => {
 app.get('/form', (req, res) => {
   try {
     res.render('confirmation-form', {
-      data: {}
+      data: {},
     });
   } catch (error) {
     console.error(error);
@@ -281,8 +281,8 @@ app.get('/form', (req, res) => {
 
 app.post('/form', async (req, res) => {
   try {
-    var StudentID = req.body.StudentID; // Corrected property name
-    var StudentName = req.body.student.name;
+    var StudentID = req.body.studentID; // Corrected property name
+    var StudentName = req.body.StudentNameame;
     var FirstName = req.body.FirstName;
     var MidName = req.body.MidName;
     var LastName = req.body.LastName;
@@ -300,45 +300,45 @@ app.post('/form', async (req, res) => {
     var Status = req.body.Status;
 
     var data = {
-      StudentID: StudentID, // Corrected property na
+      StudentID: StudentID,
       StudentName: StudentName,
       FirstName: FirstName,
       MidName: MidName,
       LastName: LastName,
       Semester: Semester,
-      CompanyName: CompanyName, // Corrected property name
+      CompanyName: CompanyName,
       CompanyAddress: CompanyAddress,
       Counsellor_InternalGuide: Counsellor_InternalGuide,
-      HRphonenumber: HRphonenumber, // Corrected property name
+      HRphonenumber: HRphonenumber,
       Duration: Duration,
       StartDate: StartDate,
       EndDate: EndDate,
-      TypeofInternship: TypeofInternship, // Corrected property name
+      TypeofInternship: TypeofInternship,
       ProjectTitle: ProjectTitle,
       ToolsandTechnology: ToolsandTechnology,
-      Status: Status
+      Status: Status,
     };
 
     const existingStudent = await ProductModel.findOne({
-      StudentID: data.StudentID
+      StudentID: data.StudentID,
     });
     if (existingStudent) {
       console.log('A student with the same StudentID already exists.');
-      existingStudent.StudentID = req.body.StudentID; // Corrected property name
+      existingStudent.StudentID = req.body.studentID;
       existingStudent.StudentName = req.body.StudentName;
       existingStudent.FirstName = req.body.FirstName;
       existingStudent.MidName = req.body.MidName;
       existingStudent.LastName = req.body.LastName;
       existingStudent.Semester = req.body.semester;
-      existingStudent.CompanyName = req.body.CompanyName; // Corrected property name
+      existingStudent.CompanyName = req.body.CompanyName;
       existingStudent.CompanyAddress = req.body.CompanyAddress;
       existingStudent.Counsellor_InternalGuide =
         req.body.Counsellor_InternalGuide;
-      existingStudent.HRphonenumber = req.body.HRphonenumber; // Corrected property name
+      existingStudent.HRphonenumber = req.body.HRphonenumber;
       existingStudent.Duration = req.body.duration;
       existingStudent.StartDate = req.body.startDate;
       existingStudent.EndDate = req.body.endDate;
-      existingStudent.TypeofInternship = req.body.TypeofInternship; // Corrected property name
+      existingStudent.TypeofInternship = req.body.TypeofInternship;
       existingStudent.ProjectTitle = req.body.ProjectTitle;
       existingStudent.ToolsandTechnology = req.body.ToolsandTechnology;
       existingStudent.Status = req.body.Status;
@@ -346,7 +346,6 @@ app.post('/form', async (req, res) => {
       await existingStudent.save();
       console.log('Student information updated successfully.');
     } else {
-      // Insert the new data
       await db.collection('products').insertOne(data);
       console.log('Record Inserted Successfully');
     }
@@ -357,23 +356,19 @@ app.post('/form', async (req, res) => {
   }
 });
 
-// Add this route to your existing app.js
 app.get('/viewdetails', async (req, res) => {
   try {
-    const studentID = req.query.StudentID; // Get StudentID from the query parameter
+    const studentID = req.query.StudentID;
 
-    // Fetch the details of the specific student using the StudentID
     const student = await ProductModel.findOne({
-      StudentID: studentID
+      StudentID: studentID,
     }).lean();
 
     if (!student) {
-      // Handle the case where the student is not found
       return res.status(404).send('Student not found');
     }
-    // Render the "viewdetails.ejs" page with the student's data
     res.render('viewdetails', {
-      student
+      student,
     });
   } catch (error) {
     console.error(error);
@@ -381,18 +376,16 @@ app.get('/viewdetails', async (req, res) => {
   }
 });
 
-// Update the student's status by StudentID
 app.post('/update-status', async (req, res) => {
   const { studentID, newStatus } = req.body;
 
   try {
-    // Update the status in the database
     await ProductModel.updateOne(
       {
-        StudentID: studentID
+        StudentID: studentID,
       },
       {
-        Status: newStatus
+        Status: newStatus,
       }
     );
 
@@ -408,7 +401,7 @@ app.post('/update-status', async (req, res) => {
 app.get('/handle-requests', async (req, res) => {
   const students = await ProductModel.find().exec();
   res.render('handle-requests', {
-    students
+    students,
   });
 });
 
