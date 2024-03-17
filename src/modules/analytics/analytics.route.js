@@ -1,5 +1,5 @@
 const express = require('express');
-const { InternshipModel } = require('../internships/internship.schema');
+const { InternshipModel } = require('../internships/schemas/internship.schema');
 
 const router = express.Router();
 
@@ -31,12 +31,7 @@ router.get('/search-students', async (req, res) => {
         students,
       });
     } else {
-      const students = await InternshipModel.find({
-        $or: [
-          { 'student.enrollmentNumber': { $regex: query, $options: 'i' } },
-          { 'student.fullName': { $regex: query, $options: 'i' } },
-        ],
-      });
+      const students = await InternshipModel.find({});
       return res.render('analytics', {
         students,
       });

@@ -22,9 +22,8 @@ function certification(studentId) {
 }
 
 function analytics() {
-  window.location.href = '/certification/completion-certificate/';
+  window.location.href = '/analytics';
 }
-
 
 // Define the function to fetch student data
 function fetchStudentData(callback) {

@@ -1,5 +1,5 @@
 const { usersService } = require('../users');
-const { InternshipModel } = require('./internship.schema');
+const { InternshipModel } = require('./schemas/internship.schema');
 const { InternshipStatus } = require('./internships.enum');
 
 class InternshipsService {
@@ -8,7 +8,7 @@ class InternshipsService {
 
     const internship = await InternshipModel.findOne(
       { 'student.enrollmentNumber': input.student.enrollmentNumber },
-      { _id: 1, status: 1 },
+      { _id: 1, status: 1 }
     );
 
     if (!internship) {
@@ -28,7 +28,7 @@ class InternshipsService {
 
     await InternshipModel.updateOne(
       { 'student.enrollmentNumber': enrollmentNumber },
-      { $set: { certificate } },
+      { $set: { certificate } }
     );
   }
 }

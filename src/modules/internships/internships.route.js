@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const { internshipsService } = require('./internship.service');
-const { InternshipModel } = require('./internship.schema');
+const { InternshipModel } = require('./schemas/internship.schema');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
@@ -10,12 +10,32 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const internships = await InternshipModel.find()
+    const internshipsQuery = {};
+
+    const { search } = req.query;
+    if (search) {
+      internshipQuery.$or = [
+        { 'student.enrollmentNumber': { $regex: search, $options: 'i' } },
+        { 'student.fullName': { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const internships = await InternshipModel.find(internshipsQuery)
       .sort({ 'student.enrollmentNumber': -1 })
       .lean();
-    return res.render('handle-requests', { internships });
+    // return res.render('handle-requests', { internships });
+    res.status(200).send({ internships });
   } catch (err) {
     console.error(err);
+  }
+});
+
+router.get('/handle-request', async (req, res) => {
+  try {
+    res.render('handle-request', { internships: req.body.internships });
+  } catch (error) {
+    console.error(error);
+    res.render('error');
   }
 });
 

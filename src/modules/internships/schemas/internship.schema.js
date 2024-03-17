@@ -1,18 +1,23 @@
 const { Schema, model, Types } = require('mongoose');
-const { USERS_COLLECTION_NAME } = require('../users');
+const { USERS_COLLECTION_NAME } = require('../../users');
 const {
   InternshipType,
   InternshipProjectType,
   InternshipStatus,
-} = require('./internships.enum');
+} = require('../internships.enum');
+const { internshipCompanySchema } = require('./internship-company.schema');
 
 const INTERNSHIPS_COLLECTION_NAME = 'internships';
 
 const internshipProjectSchema = new Schema(
   {
-    type: { type: String, required: true, enum: InternshipProjectType },
-    name: { type: String, required: true },
-    technologies: { type: [String], required: true, default: [] },
+    type: { type: String, required: true, minLength: 1 },
+    name: { type: String, required: true, minLength: 1 },
+    technologies: {
+      type: [{ type: String, minLength: 1 }],
+      required: true,
+      default: [],
+    },
   },
   { _id: false }
 );
@@ -20,10 +25,15 @@ const internshipProjectSchema = new Schema(
 const internshipStudentSchema = new Schema(
   {
     _id: { type: Types.ObjectId, required: true, ref: USERS_COLLECTION_NAME },
-    firstName: { type: String, required: true },
-    lastName: { type: String },
-    fullName: { type: String, required: true },
-    enrollmentNumber: { type: String, required: true },
+    firstName: { type: String, required: true, minLength: 1 },
+    lastName: { type: String, minLength: 1 },
+    fullName: { type: String, required: true, minLength: 1 },
+    enrollmentNumber: {
+      type: String,
+      required: true,
+      minLength: 7,
+      maxLength: 10,
+    },
     semester: { type: Number, required: true, min: 1, max: 8 },
   },
   { _id: false }
@@ -32,6 +42,7 @@ const internshipStudentSchema = new Schema(
 const internshipSchema = new Schema(
   {
     type: { type: String, enum: Object.values(InternshipType) },
+    company: { type: internshipCompanySchema, required: true },
     project: { type: internshipProjectSchema, required: true },
     status: {
       type: String,

@@ -1,6 +1,6 @@
 const InternshipType = Object.freeze({
-  IN_HOUSE: 'In House',
-  IN_COMPANY: 'In Company',
+  IN_HOUSE: 'IN_HOUSE',
+  IN_COMPANY: 'IN_COMPANY',
 });
 
 const InternshipStatus = Object.freeze({
@@ -9,10 +9,14 @@ const InternshipStatus = Object.freeze({
   REJECTED: 'REJECTED',
 });
 
-const InternshipProjectType = Object.freeze({});
+const CompanyGuidePersonType = Object.freeze({
+  COUNSELLOR: 'COUNSELLOR',
+  INTERNAL: 'INTERNAL',
+});
 
 module.exports = {
   InternshipType,
   InternshipStatus,
   InternshipProjectType,
+  CompanyGuidePersonType,
 };

@@ -22,26 +22,6 @@ app.use(express.static(__dirname + '/assets'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.urlencoded({ extended: true }));
 
-//Headers
-const headers = [
-  'StudentID',
-  'StudentName',
-  'FirstName',
-  'MidName',
-  'LastName',
-  'Semester',
-  'CompanyName',
-  'CompanyAddress',
-  'Counsellor_InternalGuide',
-  'HRphonenumber',
-  'Duration',
-  'StartDate',
-  'EndDate',
-  'TypeofInternship',
-  'ProjectTitle',
-  'ToolsandTechnology',
-];
-
 app.use('/auth', AuthRoutes);
 app.use('/users', UserRoutes);
 app.use('/internships', InternshipRoutes);
