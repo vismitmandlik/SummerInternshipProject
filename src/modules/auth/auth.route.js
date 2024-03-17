@@ -1,6 +1,7 @@
 const express = require('express');
-const router = express.Router();
 const { UserModel, UserRole } = require('../users');
+
+const router = express.Router();
 
 router.post('/login', async (req, res) => {
   try {

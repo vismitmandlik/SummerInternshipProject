@@ -1,14 +1,15 @@
 require('ejs');
 const express = require('express');
-const app = express();
 const { connectDatabase } = require('./utils/db/mongoose/connection');
-const path = require('path');
 const bodyParser = require('body-parser');
-const favicon = require('serve-favicon');
-const passport = require('passport');
-const expressSession = require('express-session');
 const { serverConfigs } = require('./configs/server.config');
-require('events').EventEmitter.defaultMaxListeners = 20; // Increase the limit as needed
+
+const { AuthRoutes } = require('./modules/auth');
+const { AnalyticsRoutes } = require('./modules/analytics');
+const { UserRoutes } = require('./modules/users');
+const { InternshipRoutes } = require('./modules/internships');
+
+const app = express();
 
 // Set up EJS as the template engine
 app.set('view engine', 'ejs');
@@ -41,21 +42,10 @@ const headers = [
   'ToolsandTechnology',
 ];
 
-// // // Routes
-
-// //  // Use routes
-// app.use('/', require('./routes'));
-// app.use('/register-faculty', require('./routes/authRoutes'));
-// app.use('/student-dashboard', require('./routes/studentRoutes'));
-// app.use('/admin-dashboard', require('./routes/adminRoutes'));
-// app.use('/certification', require('./routes/certificateRoutes'));
-// app.use('/generate/', require('./routes/reportGenerationRoutes'));
-// app.use('/change-password', require('./routes/change-password'));
-
-//New route structure
-app.use('/auth', require('./modules/auth/auth.route'));
-// app.use('/users',require('./modules/users/users.route'))
-app.use('/internships',require('./modules/internships/internships.route'))
+app.use('/auth', AuthRoutes);
+app.use('/users', UserRoutes);
+app.use('/internships', InternshipRoutes);
+app.use('/analytics', AnalyticsRoutes);
 
 app.get('/', async (req, res) => {
   try {

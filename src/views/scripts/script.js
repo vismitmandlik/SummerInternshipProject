@@ -21,6 +21,11 @@ function certification(studentId) {
   window.location.href = '/certification/completion-certificate/';
 }
 
+function analytics() {
+  window.location.href = '/certification/completion-certificate/';
+}
+
+
 // Define the function to fetch student data
 function fetchStudentData(callback) {
   // Make an AJAX request to fetch student data

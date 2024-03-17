@@ -3,6 +3,5 @@ module.exports = {
   ...require('./internship.schema'),
   ...require('./internships.constant'),
   ...require('./internships.enum'),
-  ...require('./internships.route'),
-  
+  InternshipRoutes: require('./internships.route'),
 };

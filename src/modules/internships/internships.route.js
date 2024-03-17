@@ -1,11 +1,12 @@
 const express = require('express');
-const router = express.Router();
 const multer = require('multer');
 const { internshipsService } = require('./internship.service');
 const { InternshipModel } = require('./internship.schema');
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
+
+const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
