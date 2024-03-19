@@ -22,7 +22,7 @@ router.post('/login', async (req, res) => {
     const data = await UserModel.findOne({ username: username });
 
     // check for faculty
-    if (data.role == 'faculty' && data.password == password) {
+    if (data.role == 'FACULTY' && data.password == password) {
       res.render('admin-dashboard', { username: username });
     }
 
