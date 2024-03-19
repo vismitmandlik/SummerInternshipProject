@@ -1,5 +1,5 @@
 require('dotenv').config();
-const rawInternships = require('./student-updated.json');
+const rawInternships = require('../dump/internship-details.json');
 
 const {
   InternshipModel,
@@ -7,8 +7,7 @@ const {
 } = require('../src/modules/internships');
 const { connectDatabase } = require('../src/utils/db/mongoose/connection');
 const { default: mongoose } = require('mongoose');
-const { UserModel } = require('../src/modules/users');
-const internships = require('../src/modules/internships');
+const { UserModel, UserRole } = require('../src/modules/users');
 
 const SEMESTER_MAP = Object.freeze({
   23: 4,
@@ -18,54 +17,95 @@ const SEMESTER_MAP = Object.freeze({
   19: 6,
 });
 
-async function importInternships() {
-  for (const rawInternship in rawInternships) {
-    // const userDoc = {};
+function cleanInternshipData(rawInternship) {
+  if (!rawInternship.FirstName) {
+    const nameParts = rawInternship.StudentName.split(' ');
+    rawInternship.FirstName = nameParts.shift();
+    rawInternship.LastName = nameParts.shift();
+    rawInternship.MidName = nameParts.shift();
+  }
+  if (!rawInternship.StudentName) {
+    rawInternship.StudentName =
+      rawInternship.FirstName + rawInternship.MidName + rawInternship.LastName;
+  }
+  return rawInternship;
+}
 
-    // const user = await UserModel.create(userDoc);
+async function importInternships() {
+  for (const [index, rawInternship] of rawInternships.entries()) {
+    const internship = cleanInternshipData(rawInternship);
+
+    let user = await UserModel.findOne(
+      { enrollmentNumber: internship.StudentID },
+      { _id: 1 }
+    ).lean();
+
+    if (!user) {
+      user = await UserModel.create({
+        firstName: internship.FirstName,
+        middleName: internship.MidName,
+        lastName: internship.LastName,
+        fullName: internship.StudentName,
+        username: internship.StudentID,
+        enrollmentNumber: internship.StudentID,
+        semester: SEMESTER_MAP[internship.StudentID.match(/\d+/)[0]],
+        role: UserRole.STUDENT,
+        password: internship.StudentID,
+      });
+    }
 
     const internshipDoc = {
-      type: rawInternship.TypeofInternship,
+      type: internship.TypeofInternship,
       company: {
-        name: rawInternship.CompanyName,
+        name: internship.CompanyName,
         address: {
-          street1: rawInternship.CompanyAddress,
-          city: rawInternship.CompanyCity,
-          state: rawInternship.CompanyState,
+          street1: internship.CompanyAddress,
+          city: internship.CompanyCity,
+          state: internship.CompanyState,
           country: 'India',
         },
         guidePerson: {
           type: CompanyGuidePersonType.COUNSELLOR,
-          name: rawInternship.Counsellor_InternalGuide,
+          name: internship.Counsellor_InternalGuide,
         },
         humanResource: {
-          name: '',
-          email: '',
-          phoneNumber: '',
+          email: internship.HRemailID,
+          phoneNumber: internship.HRphonenumber,
         },
       },
       project: {
-        type: rawInternship.TypeofProject || 'Technology Training',
-        name: rawInternship.ProjectTitle,
-        technologies: rawInternship.ToolsandTechnology.split(',').map(
+        type: internship.TypeofProject || 'Technology Training',
+        name: internship.ProjectTitle,
+        technologies: internship.ToolsandTechnology.split(',').map(
           (technology) => technology.trim()
         ),
       },
-
-      // TODO: Add this object conditionaly
       student: {
-        _id: '',
-        firstName: '',
-        lastName: '',
-        fullName: '',
-        enrollmentNumber: '',
-        semester: 1,
+        _id: user._id,
+        firstName: internship.FirstName,
+        middleName: internship.MidName,
+        lastName: internship.LastName,
+        fullName: internship.StudentName,
+        enrollmentNumber: internship.StudentID,
+        semester: SEMESTER_MAP[internship.StudentID.match(/\d+/)[0]],
+        counsellorName:
+          internship.Counsellor || internship.Counsellor_InternalGuide,
       },
-      startedAt: rawInternship.StartDate || undefined,
-      endedAt: rawInternship.EndDate || undefined,
+      startedAt: internship.StartDate || undefined,
+      endedAt: internship.EndDate || undefined,
     };
 
-    await InternshipModel.create(internshipDoc);
+    try {
+      await InternshipModel.updateOne(
+        { 'student.enrollmentNumber': internship.StudentID },
+        { $setOnInsert: internshipDoc },
+        { upsert: true }
+      );
+    } catch (err) {
+      console.error(err);
+    }
+
+    break;
   }
 }
 

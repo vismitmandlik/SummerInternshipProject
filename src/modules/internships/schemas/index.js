@@ -1,3 +1,3 @@
-modules.exports = {
+module.exports = {
   ...require('./internship.schema')
 }

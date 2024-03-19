@@ -17,6 +17,5 @@ const CompanyGuidePersonType = Object.freeze({
 module.exports = {
   InternshipType,
   InternshipStatus,
-  InternshipProjectType,
   CompanyGuidePersonType,
 };

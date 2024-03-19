@@ -6,10 +6,19 @@ const USERS_COLLECTION_NAME = 'users';
 
 const userSchema = new Schema(
   {
-    firstName: { type: String, required: true },
-    lastName: { type: String },
-    fullName: { type: String, required: true },
-    username: { type: String, required: true, unique: true },
+    firstName: { type: String, required: true, minLength: 1 },
+    middleName: {
+      type: String,
+      // required: true, // Uncomment after running import internship script
+      minLength: 1,
+    },
+    lastName: {
+      type: String,
+      // required: true, // Uncomment after running import internship script
+      minLength: 1,
+    },
+    fullName: { type: String, required: true, minLength: 1 },
+    username: { type: String, required: true, unique: true, minLength: 1 },
     enrollmentNumber: {
       type: String,
       required: [
@@ -18,6 +27,8 @@ const userSchema = new Schema(
         },
         `{PATH} is required when roll is ${UserRole.STUDENT}`,
       ],
+      minLength: 7,
+      maxLength: 10,
     },
     role: {
       type: String,
@@ -25,7 +36,7 @@ const userSchema = new Schema(
       default: UserRole.STUDENT,
       enum: Object.values(UserRole),
     },
-    password: { type: String },
+    password: { type: String, required: true, minLength: 4 },
   },
   { timestamps: true }
 );

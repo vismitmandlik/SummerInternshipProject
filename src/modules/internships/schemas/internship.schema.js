@@ -26,7 +26,16 @@ const internshipStudentSchema = new Schema(
   {
     _id: { type: Types.ObjectId, required: true, ref: USERS_COLLECTION_NAME },
     firstName: { type: String, required: true, minLength: 1 },
-    lastName: { type: String, minLength: 1 },
+    middleName: {
+      type: String,
+      // required: true, // Uncomment after running import internship script
+      minLength: 1,
+    },
+    lastName: {
+      type: String,
+      // required: true, // Uncomment after running import internship script
+      minLength: 1,
+    },
     fullName: { type: String, required: true, minLength: 1 },
     enrollmentNumber: {
       type: String,
@@ -35,6 +44,7 @@ const internshipStudentSchema = new Schema(
       maxLength: 10,
     },
     semester: { type: Number, required: true, min: 1, max: 8 },
+    counsellorName: { type: String, required: true, minLength: 1 },
   },
   { _id: false }
 );
