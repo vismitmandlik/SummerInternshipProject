@@ -283,7 +283,7 @@ app.post('/form', async (req, res) => {
   try {
     var StudentID = req.body.StudentID; // Corrected property name
     var StudentName = req.body.StudentName;
-    var FirstName = req.body.FirstName;
+    var FirstName = req.body.FirslogintName;
     var MidName = req.body.MidName;
     var LastName = req.body.LastName;
     var Semester = req.body.semester;
