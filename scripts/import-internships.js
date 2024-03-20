@@ -105,7 +105,7 @@ async function importInternships() {
       console.error(err);
     }
 
-    break;
+    // break;
   }
 }
 
