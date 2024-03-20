@@ -27,7 +27,11 @@ const companyGuidePersonSchema = new Schema(
 
 const companyHumanResourceSchema = new Schema(
   {
-    name: { type: String, required: true, minLength: 1 },
+    name: {
+      type: String,
+      // required: true, // Uncomment after running import internship script
+      minLength: 1,
+    },
     email: { type: String, required: true, minLength: 3, maxLength: 320 },
     phoneNumber: { type: String, required: true, minLength: 5, maxLength: 20 },
   },

@@ -1,6 +1,7 @@
 const InternshipType = Object.freeze({
   IN_HOUSE: 'IN_HOUSE',
   IN_COMPANY: 'IN_COMPANY',
+  IN_RESEARCH_LAB: 'IN_RESEARCH_LAB',
 });
 
 const InternshipStatus = Object.freeze({
