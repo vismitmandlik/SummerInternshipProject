@@ -23,7 +23,10 @@
           <li>
             <a href="#" class="logo">
               <img src="/icons/user-icon.png" alt="" />
-              <span class="nav-item"><%=username%></span>
+              <span class="nav-item"
+                ><%=user.firstName%> <%=user.firstName%>
+                <%=user.lastName%></span
+              >
             </a>
           </li>
           <li>
@@ -82,7 +85,11 @@
           <div class="card">
             <i class="fab fa-wordpress"></i>
             <h3>Handle Requests</h3>
-            <button type="button" class="button-solid" onclick="handleRequests()">
+            <button
+              type="button"
+              class="button-solid"
+              onclick="handleRequests()"
+            >
               Click Here
             </button>
           </div>

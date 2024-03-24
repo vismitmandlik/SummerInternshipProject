@@ -23,8 +23,8 @@ router.get('/', async (req, res) => {
     const internships = await InternshipModel.find(internshipsQuery)
       .sort({ 'student.enrollmentNumber': -1 })
       .lean();
-    // return res.render('handle-requests', { internships });
-    res.status(200).send({ internships });
+    return res.render('handle-requests', { internships });
+    // res.status(200).send({ internships });
   } catch (err) {
     console.error(err);
   }

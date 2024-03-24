@@ -8,10 +8,14 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const user = await UserModel.findOne({ username: username }).lean();
 
+    if (!user) {
+      throw new Error('User not found');
+    }
+
     if (user.password !== password) res.redirect('/');
 
     if (user.role == UserRole.FACULTY) {
-      res.render('admin-dashboard', { username: username });
+      res.render('admin-dashboard', { user: user });
     } else if (user.role === UserRole.STUDENT) {
       res.render('student-dashboard', {
         student: {
