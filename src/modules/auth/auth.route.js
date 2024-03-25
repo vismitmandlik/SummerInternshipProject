@@ -18,7 +18,7 @@ router.post('/login', async (req, res) => {
       res.render('admin-dashboard', { user: user });
     } else if (user.role === UserRole.STUDENT) {
       res.render('student-dashboard', {
-        student: {
+        user: {
           firstName: user.firstName,
           lastName: user.lastName,
           fullName: user.fullName,
@@ -126,12 +126,8 @@ router.post('/change-password', async (req, res) => {
 //Student-dashboard
 router.get('/student-dashboard', async (req, res) => {
   try {
-    const studentID = req.query.StudentID;
-
-    const student = await ProductModel.findOne({
-      StudentID: studentID,
-    }).lean();
-    res.render('student-dashboard', { student: student });
+    const username = req.query.username;
+    res.render('student-dashboard', { username: username });
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error at /student-dashboard');

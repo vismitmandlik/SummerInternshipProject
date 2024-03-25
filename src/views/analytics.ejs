@@ -38,12 +38,12 @@
                 <td><%= internship.student.enrollmentNumber %></td>
                 <td><%= internship.student.fullName %></td>
                 <td>
-                    <a href="/viewdetails?StudentID=<%= student.StudentID %>">View</a>
+                    <a href="/internships?StudentID=<%= student.enrollmentNumber %>">View</a>
                 </td>
                 <td id="status-<%= student.StudentID %>"><%= student.Status %></td>
                 <td>
                     <% if (internship.certificate) { %>
-                        <a href="/certification/certificate-preview/<%= student.StudentID %>" target="_blank">View Certificate</a>
+                        <a href="/certification/certificate-preview/<%= student.enrollmentNumber %>" target="_blank">View Certificate</a>
                     <% } else { %>
                         <% if (internship.status === 'APPROVED') { %>
                             Not Uploaded
@@ -54,7 +54,7 @@
                 </td>
                 <td>
                     <% if (internship.status === 'APPROVED') { %>
-                        <a href="/capture-pdf/<%= student.StudentID %>">Download NOC</a>
+                        <a href="/capture-pdf/<%= student.enrollmentNumber %>">Download NOC</a>
                     <% } else { %>
                         Not Applicable
                     <% } %>

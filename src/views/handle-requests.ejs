@@ -82,7 +82,7 @@
                         <td><%= internship.student.enrollmentNumber %></td>
                         <td><%= internship.student.fullName %></td>
                         <td>
-                            <a href="/internships?enrollmentNumber=<%= internship.student.enrollmentNumber %>">View</a>
+                            <a href="/internships/<%= internship.student.enrollmentNumber %>">View</a>
                         </td>
                         <td id="status-<%= internship.enrollmentNumber %>"><%= internship.status %></td>
                         <td>

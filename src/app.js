@@ -4,7 +4,6 @@ const { connectDatabase } = require('./utils/db/mongoose/connection');
 const bodyParser = require('body-parser');
 const { serverConfigs } = require('./configs/server.config');
 
-
 const { AuthRoutes } = require('./modules/auth');
 const { AnalyticsRoutes } = require('./modules/analytics');
 const { UserRoutes } = require('./modules/users');

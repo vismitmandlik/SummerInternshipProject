@@ -1,10 +1,10 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%= student.StudentID %> Details</title>
-    <link rel="icon" href="../public/img/favicon.jpg" type="image/png" />
-    <link rel="stylesheet" type="text/css" href="../public/css/style3.css" />
+    <title><%= internship.student.enrollmentNumber %> Details</title>
+    <link rel="icon" href="/images/favicon.jpg" type="image/png" />
+    <link rel="stylesheet" type="text/css" href="/css/style3.css" />
     <link
       rel="stylesheet"
       href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css"
@@ -15,10 +15,10 @@
 
   <body>
     <div class="navbarr">
-      <img class="charusat-logo" src="/public/img/image-2.png" />
+      <img class="charusat-logo" src="/images/image-2.png" />
       <div class="Home-nav">
-        <a href="/admin-dashboard">
-          <img src="../public/img/home.png" alt="Home" />
+        <a href="/auth/admin-dashboard">
+          <img src="/images/home.png" alt="Home" />
         </a>
       </div>
     </div>
@@ -34,7 +34,7 @@
             type="text"
             id="StudentID"
             name="StudentID"
-            value="<%= student.StudentID %>"
+            value="<%= internship.student.enrollmentNumber %>"
             readonly
           />
         </div>
@@ -44,19 +44,18 @@
             type="text"
             id="StudentName"
             name="StudentName"
-            value="<%= student.StudentName || (student.FirstName + (student.MidName ? ' ' + student.MidName : '') + (student.LastName ? ' ' + student.LastName : '')) %>"
+            value="<%= internship.student.fullName %>"
             readonly
           />
         </div>
 
-        <!-- Other form fields here -->
         <div class="form-group">
           <label for="Semester">Semester:</label>
           <input
             type="text"
             id="Semester"
             name="Semester"
-            value="<%= student.Semester %>"
+            value="<%= internship.student.semester %>"
             readonly
           />
         </div>
@@ -67,7 +66,7 @@
             type="text"
             id="CompanyName"
             name="CompanyName"
-            value="<%= student.CompanyName %>"
+            value="<%= internship.company.name %>"
             readonly
           />
         </div>
@@ -78,7 +77,7 @@
             type="text"
             id="CompanyAddress"
             name="CompanyAddress"
-            value="<%= student.CompanyAddress %>"
+            value="<%= internship.company.address.street1 %>"
             readonly
           />
         </div>
@@ -89,7 +88,7 @@
             type="text"
             id="Counsellor_InternalGuide"
             name="Counsellor_InternalGuide"
-            value="<%= student.Counsellor_InternalGuide %>"
+            value="<%= internship.company.guidePerson.name %>"
             readonly
           />
         </div>
@@ -100,7 +99,7 @@
             type="text"
             id="HRphonenumber"
             name="HRphonenumber"
-            value="<%= student.HRphonenumber %>"
+            value="<%= internship.company.humanResource.name %>"
             readonly
           />
         </div>
@@ -111,7 +110,7 @@
             type="text"
             id="Duration"
             name="Duration"
-            value="<%= student.Duration %>"
+            value="<%= internship.endDate - internship.startDate %>"
             readonly
           />
           <label for="StartDate">Start Date:</label>
@@ -119,7 +118,7 @@
             type="text"
             id="StartDate"
             name="StartDate"
-            value="<%= student.StartDate %>"
+            value="<%= internship.StartDate %>"
             readonly
           />
           <label for="EndDate">End Date:</label>
@@ -127,7 +126,7 @@
             type="text"
             id="EndDate"
             name="EndDate"
-            value="<%= student.EndDate %>"
+            value="<%= internship.EndDate %>"
             readonly
           />
         </div>
@@ -138,7 +137,7 @@
             type="text"
             id="TypeofInternship"
             name="TypeofInternship"
-            value="<%= student.TypeofInternship %>"
+            value="<%= internship.type %>"
             readonly
           />
         </div>
@@ -149,7 +148,7 @@
             type="text"
             id="ProjectTitle"
             name="ProjectTitle"
-            value="<%= student.ProjectTitle %>"
+            value="<%= internship.project.name %>"
             readonly
           />
         </div>
@@ -160,25 +159,22 @@
             type="text"
             id="ToolsandTechnology"
             name="ToolsandTechnology"
-            value="<%= student.ToolsandTechnology %>"
+            value="<%= internship.project.technologies %>"
             readonly
           />
         </div>
 
         <div class="form-group">
           <label for="status">Status:</label>
-          <span id="status"><%= student.Status %></span>
+          <span id="status"><%= internship.status %></span>
         </div>
 
-        <!-- Hidden input for the student status -->
         <input type="hidden" id="status" name="status" value="" />
 
-        <!-- Approve Button -->
         <button type="button" class="btn1" onclick="updateStatus('Approved');">
           Approve
         </button>
 
-        <!-- Reject Button -->
         <button type="button" class="btn2" onclick="updateStatus('Rejected');">
           Reject
         </button>
@@ -187,7 +183,7 @@
 
     <script>
       function updateStatus(newStatus) {
-        const studentID = '<%= student.StudentID %>'; // Get student ID
+        const studentID = '<%= internship.student.enrollmentNumber %>'; // Get student ID
 
         // Send an AJAX request to update the status
         $.ajax({
@@ -195,7 +191,7 @@
           url: '/update-status',
           data: {
             studentID: studentID,
-            newStatus: newStatus
+            newStatus: newStatus,
           },
           success: function (response) {
             // Update the status in the HTML
@@ -207,10 +203,9 @@
           },
           error: function (error) {
             console.error('Error updating status:', error);
-          }
+          },
         });
       }
     </script>
-    <!-- </div> -->
   </body>
 </html>
