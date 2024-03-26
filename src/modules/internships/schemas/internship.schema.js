@@ -28,12 +28,12 @@ const internshipStudentSchema = new Schema(
     firstName: { type: String, required: true, minLength: 1 },
     middleName: {
       type: String,
-      // required: true, // Uncomment after running import internship script
+      // required: true, // TODO: Uncomment after running import internship script
       minLength: 1,
     },
     lastName: {
       type: String,
-      // required: true, // Uncomment after running import internship script
+      // required: true, // TODO: Uncomment after running import internship script
       minLength: 1,
     },
     fullName: { type: String, required: true, minLength: 1 },

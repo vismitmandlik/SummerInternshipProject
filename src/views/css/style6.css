@@ -61,8 +61,7 @@ nav {
   left: 0;
   background: #fff;
   width: 100%;
-  max-width: 280px;
-
+  max-width: fit-content;
   overflow: hidden;
   box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
 }

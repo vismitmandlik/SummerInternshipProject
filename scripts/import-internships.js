@@ -6,7 +6,7 @@ const {
   CompanyGuidePersonType,
 } = require('../src/modules/internships');
 const { connectDatabase } = require('../src/utils/db/mongoose/connection');
-const { default: mongoose } = require('mongoose');
+const mongoose = require('mongoose');
 const { UserModel, UserRole } = require('../src/modules/users');
 
 const SEMESTER_MAP = Object.freeze({

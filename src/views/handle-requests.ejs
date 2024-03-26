@@ -6,8 +6,8 @@
     <link rel="stylesheet" type="text/css" href="/css/style4.css">
     <script>
         function customSort(a, b) {
-            const studentIdA = a.getAttribute('data-studentid');
-            const studentIdB = b.getAttribute('data-studentid');
+            const studentIdA = a.getAttribute('data-enrollmentNumber');
+            const studentIdB = b.getAttribute('data-enrollmentNumber');
             return studentIdA.localeCompare(studentIdB);
         }
 
@@ -78,18 +78,18 @@
             </thead>
             <tbody>
                 <% internships.forEach((internship) => { %>
-                    <tr data-studentid="<%= student.StudentID %>">
-                        <td><%= student.StudentID %></td>
-                        <td><%= student.StudentName %></td>
+                    <tr data-enrollmentNumber="<%= internship.enrollmentNumber %>">
+                        <td><%= internship.student.enrollmentNumber %></td>
+                        <td><%= internship.student.fullName %></td>
                         <td>
-                            <a href="/viewdetails?StudentID=<%= internship.student.enrollmentNumber %>">View</a>
+                            <a href="/internships/<%= internship.student.enrollmentNumber %>">View</a>
                         </td>
-                        <td id="status-<%= student.StudentID %>"><%= student.Status %></td>
+                        <td id="status-<%= internship.enrollmentNumber %>"><%= internship.status %></td>
                         <td>
-                            <% if (student.certificate) { %>
-                                <a href="/certification/certificate-preview/<%= student.StudentID %>" target="_blank">View Certificate</a>
+                            <% if (internship.certificate) { %>
+                                <a href="/certification/certificate-preview/<%= student.enrollmentNumber %>" target="_blank">View Certificate</a>
                             <% } else { %>
-                                <% if (student.Status === 'Approved') { %>
+                                <% if (internship.Status === 'Approved') { %>
                                     Not Uploaded
                                 <% } else { %>
                                     -
@@ -97,8 +97,8 @@
                             <% } %>
                         </td>
                         <td>
-                            <% if (student.Status === 'Approved') { %>
-                                <a href="/capture-pdf/<%= student.StudentID %>">Download NOC</a>
+                            <% if (internship.Status === 'Approved') { %>
+                                <a href="/capture-pdf/<%= student.enrollmentNumber %>">Download NOC</a>
                             <% } else { %>
                                 Not Applicable
                             <% } %>

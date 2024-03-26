@@ -14,7 +14,7 @@ router.get('/', async (req, res) => {
 
     const { search } = req.query;
     if (search) {
-      internshipQuery.$or = [
+      internshipsQuery.$or = [
         { 'student.enrollmentNumber': { $regex: search, $options: 'i' } },
         { 'student.fullName': { $regex: search, $options: 'i' } },
       ];
@@ -23,19 +23,9 @@ router.get('/', async (req, res) => {
     const internships = await InternshipModel.find(internshipsQuery)
       .sort({ 'student.enrollmentNumber': -1 })
       .lean();
-    // return res.render('handle-requests', { internships });
-    res.status(200).send({ internships });
+    return res.render('handle-requests', { internships });
   } catch (err) {
     console.error(err);
-  }
-});
-
-router.get('/handle-request', async (req, res) => {
-  try {
-    res.render('handle-request', { internships: req.body.internships });
-  } catch (error) {
-    console.error(error);
-    res.render('error');
   }
 });
 
@@ -51,7 +41,7 @@ router.post('/', async (req, res) => {
 
 router.get('/approval-form', async (req, res) => {
   try {
-    const data = await ProductModel.findOne().lean().sort({ StudentID: -1 });
+    const data = await InternshipModel.findOne().lean().sort({ StudentID: -1 });
     res.render('approval-form', {
       data,
     });
@@ -81,5 +71,24 @@ router.post(
     }
   }
 );
+
+router.get('/:enrollmentNumber', async (req, res) => {
+  try {
+    const { enrollmentNumber } = req.params;
+    console.log(enrollmentNumber);
+
+    const internship = await InternshipModel.findOne({
+      'student.enrollmentNumber': enrollmentNumber,
+    }).lean();
+
+    if (!internship) {
+      return res.status(404).send('Student not found');
+    }
+    res.render('view-details', { internship });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 module.exports = router;

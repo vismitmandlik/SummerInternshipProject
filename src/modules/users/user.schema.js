@@ -1,5 +1,4 @@
 const { Schema, model } = require('mongoose');
-const passportLocalMongoose = require('passport-local-mongoose');
 const { UserRole } = require('./users.enum');
 
 const USERS_COLLECTION_NAME = 'users';
@@ -9,12 +8,12 @@ const userSchema = new Schema(
     firstName: { type: String, required: true, minLength: 1 },
     middleName: {
       type: String,
-      // required: true, // Uncomment after running import internship script
+      required: true, // TODO: Uncomment after running import internship script
       minLength: 1,
     },
     lastName: {
       type: String,
-      // required: true, // Uncomment after running import internship script
+      required: true, // TODO: Uncomment after running import internship script
       minLength: 1,
     },
     fullName: { type: String, required: true, minLength: 1 },
@@ -25,10 +24,21 @@ const userSchema = new Schema(
         function () {
           this.role === UserRole.STUDENT;
         },
-        `{PATH} is required when roll is ${UserRole.STUDENT}`,
+        `{PATH} is required when role is ${UserRole.STUDENT}`,
       ],
       minLength: 7,
       maxLength: 10,
+    },
+    semester: {
+      type: Number,
+      required: [
+        function () {
+          this.role === UserRole.STUDENT;
+        },
+        `{PATH} is required when role is ${UserRole.STUDENT}`,
+      ],
+      min: 1,
+      max: 8,
     },
     role: {
       type: String,
@@ -40,8 +50,6 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
-
-userSchema.plugin(passportLocalMongoose);
 
 const UserModel = model(USERS_COLLECTION_NAME, userSchema);
 

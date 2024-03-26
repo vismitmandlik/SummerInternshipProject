@@ -5,48 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Student-Dashboard</title>
     <link rel="icon" href="../public/img/favicon.jpg" type="image/png" />
-    <link rel="stylesheet" type="text/css" href="/public/css/style6.css" />
-    <!-- Font Awesome Cdn Link -->
+    <link rel="stylesheet" type="text/css" href="/css/style6.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
-    <script src="/public/scripts/script.js"></script>
+    <script src="/scripts/script.js"></script>
   </head>
 
   <body>
     <div class="navbarr">
-      <img class="charusat-logo" src="../public/img/image-2.png" />
+      <img class="charusat-logo" src="/images/image-2.png" />
     </div>
     <div class="container">
       <nav>
         <ul>
           <li>
             <a href="#" class="logo">
-              <img src="/public/img/user-icon.png" alt="" />
-              <span class="nav-item">Student</span>
+              <img src="/icons/user-icon.png" alt="" />
+              <span class="nav-item"
+                ><%=user.firstName%> <%=user.middleName%>
+                <%=user.lastName%></span
+              >
             </a>
           </li>
-          <!-- <li>
-                    <a href="#">
-                        <i class="fas fa-home"></i>
-                        <span class="nav-item">Home</span>
-                    </a>
-                </li> -->
           <li>
             <a href="">
               <i class="fas fa-user"></i>
               <span class="nav-item">Profile</span>
             </a>
           </li>
-
-          <!-- <li>
-                    <a href="">
-                        <i class="fas fa-chart-bar"></i>
-                        <span class="nav-item">Analytics</span>
-                    </a>
-                </li> -->
-
           <li>
             <a href="/change-password">
               <i class="fas fa-cog"></i>
@@ -85,7 +73,6 @@
           <div class="card">
             <i class="fas fa-laptop-code"></i>
             <h3>Confirmation Form</h3>
-            <!-- <button>Click Here</button> -->
             <button type="button" class="button-solid" onclick="Confirmation()">
               Click Here
             </button>
@@ -93,7 +80,6 @@
           <div class="card">
             <i class="fas fa-laptop-code"></i>
             <h3>Completion Certificate</h3>
-            <!-- <button>Click Here</button> -->
             <button
               type="button"
               class="button-solid"
