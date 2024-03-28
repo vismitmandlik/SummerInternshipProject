@@ -2,6 +2,10 @@ function Location() {
   window.location.href = '/auth/admin-dashboard';
 }
 
+function approvalForm() {
+  window.location.href = '/internships/approval-form';
+}
+
 function confirmationForm() {
   window.location.href = '/internships/confirmation-form';
 }
@@ -10,19 +14,20 @@ function handleRequests() {
   window.location.href = '/internships';
 }
 
-function approval_form() {
-  window.location.href = '/internships/approval-form';
-}
 function RegisterFaculty() {
   window.location.href = '/auth/register-faculty';
 }
 
 function certification(studentId) {
-  window.location.href = '/certification/completion-certificate/';
+  window.location.href = '/internships/completion-certificate';
 }
 
 function analytics() {
   window.location.href = '/analytics';
+}
+
+function adminDashboard() {
+  window.location.href = '/dashboard/admin-dashboard';
 }
 
 // Define the function to fetch student data
@@ -40,6 +45,7 @@ function fetchStudentData(callback) {
   });
 }
 
-function alertMessage() {
+function alertAndLogout() {
   window.alert('Are you sure you want to log out?');
+  window.location.href = '/';
 }

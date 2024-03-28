@@ -29,12 +29,7 @@
               >
             </a>
           </li>
-          <li>
-            <a href="">
-              <i class="fas fa-user"></i>
-              <span class="nav-item">Profile</span>
-            </a>
-          </li>
+
           <li>
             <a href="/change-password">
               <i class="fas fa-cog"></i>
@@ -43,9 +38,9 @@
           </li>
 
           <li>
-            <a href="/" class="logout">
+            <a href="#" class="logout">
               <i class="fas fa-sign-out-alt"></i>
-              <span class="nav-item" onclick="alertMessage()">Log out</span>
+              <span class="nav-item" onclick="alertAndLogout()">Log out</span>
             </a>
           </li>
         </ul>
@@ -65,7 +60,7 @@
             <button
               type="button"
               class="button-solid"
-              onclick="approval_form()"
+              onclick="approvalForm()"
             >
               Click Here
             </button>
@@ -73,7 +68,11 @@
           <div class="card">
             <i class="fas fa-laptop-code"></i>
             <h3>Confirmation Form</h3>
-            <button type="button" class="button-solid" onclick="confirmationForm()">
+            <button
+              type="button"
+              class="button-solid"
+              onclick="confirmationForm()"
+            >
               Click Here
             </button>
           </div>
