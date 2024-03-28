@@ -27,6 +27,7 @@ body {
   width: 100%;
   height: 50px;
   background: #16629e;
+  
 }
 
 .navbarr .Home-nav {
@@ -49,22 +50,21 @@ body {
   object-fit: cover;
 }
 
-.container {
-  display: flex;
-}
-
-nav {
+/* .navbarr a{
   position: relative;
-  top: 0;
-  bottom: 0;
-  height: 100vh;
-  left: 0;
-  background: #fff;
-  width: 100%;
-  max-width: fit-content;
-  overflow: hidden;
-  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+  color: rgb(255, 255, 255);
+  font-size: 14px;
+  width: 280px;
+  padding: 5px;
+  margin-left: 1300px;
+  margin-top: 0%;
 }
+.navbarr a:hover{
+  background: #717779;
+  object-fit: cover;
+
+} */
+
 
 .logo {
   text-align: center;
@@ -83,6 +83,23 @@ nav {
   padding-left: 15px;
   font-size: 18px;
   text-transform: uppercase;
+}
+
+.container {
+  display: flex;
+}
+
+nav {
+  position: relative;
+  top: 0;
+  bottom: 0;
+  height: 100vh;
+  left: 0;
+  background: #fff;
+  width: 100%;
+  max-width: fit-content;
+  overflow: hidden;
+  box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
 }
 
 a {
