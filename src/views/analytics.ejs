@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/analytics.css">
+    <title>Analytics</title>
+</head>
+<body>
+    <div class="navbarr">
+        <img class="charusat-logo" src="/images/image-2.png" />
+            <div class="Home-nav">
+                <a href="/admin-dashboard">
+                    <img src="/images/white-home-icon.png" alt="Home">
+                </a>
+            </div>
+    </div>
+    <form action="/analytics" method="get">
+        <div class="container">
+            <h2>Analytics</h2>
+            <div class="form-group">
+                <label for="semester">Filter by Semester: </label>
+                <select name="semester" id="semester">
+                    <option value="All">All</option>
+                    <option value="Semester 4">Semester 4</option>
+                    <option value="Semester 6">Semester 6</option>
+                </select>
+            </div>
+            <div class="container">
+                <div class="form-group">
+                    <label for="total">Total : </label>
+                    <output >No. of Total requests</output>
+                </div>
+                <div class="form-group">
+                    <label for="pending">Pending : </label>
+                    <output>Pending requests</output>
+                </div>
+                <div class="form-group">
+                    <label for="approved">Approved : </label>
+                    <output>Approved requests</output>
+                </div>
+                <div class="form-group">
+                    <label for="rejected">Rejected : </label>
+                    <output>Rejected requests</output>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="noc">Download All NOC</label>
+                <button type="submit">Download</button>
+                <!-- <select name="noc" id="noc">
+                    <option value="All">All</option>
+                    <option value="Semester 4">Semester 4</option>
+                    <option value="Semester 6">Semester 6</option>
+                </select> -->
+            </div>
+        </div>
+    </form>
+    
+</body>
+</html>
