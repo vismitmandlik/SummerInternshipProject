@@ -125,7 +125,13 @@
         
 
         const searchQuery = document.getElementById("searchStudentInput").value;
-        fetch(`/analytics/search?query=${searchQuery}`)
+        fetch({
+            method: 'GET',
+            url: '/analytics/search?query=${searchQuery}',
+            headers: {
+                Authorization: ''
+            }
+        })
                 .then((response) => response.json())
                 .then((data) => {
                     // Update the content of the student table and pagination

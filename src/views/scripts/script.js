@@ -2,8 +2,8 @@ function Location() {
   window.location.href = '/auth/admin-dashboard';
 }
 
-function Confirmation() {
-  window.location.href = '/confirmation-form';
+function confirmationForm() {
+  window.location.href = '/internships/confirmation-form';
 }
 
 function handleRequests() {
@@ -11,7 +11,7 @@ function handleRequests() {
 }
 
 function approval_form() {
-  window.location.href = '/approval-form';
+  window.location.href = '/internships/approval-form';
 }
 function RegisterFaculty() {
   window.location.href = '/auth/register-faculty';

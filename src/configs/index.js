@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 module.exports = {
-  ...require('./auth.config'),
+  ...require('./server.config'),
   ...require('./database.config'),
   ...require('./auth.config'),
 };

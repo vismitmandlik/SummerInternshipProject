@@ -8,6 +8,7 @@ const { AuthRoutes } = require('./modules/auth');
 const { AnalyticsRoutes } = require('./modules/analytics');
 const { UserRoutes } = require('./modules/users');
 const { InternshipRoutes } = require('./modules/internships');
+const { DashboardRoutes } = require('./modules/dashboard');
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/auth', AuthRoutes);
 app.use('/users', UserRoutes);
+app.use('/dashboard', DashboardRoutes);
 app.use('/internships', InternshipRoutes);
 app.use('/analytics', AnalyticsRoutes);
 

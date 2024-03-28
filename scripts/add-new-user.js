@@ -6,18 +6,22 @@ const { UserModel, UserRole } = require('../src/modules/users');
 
 async function addNewUser() {
   const userDoc = {
-    firstName: 'Sneha',
-    middleName: 'Ashwinbhai',
-    lastName: 'Padhiar',
-    fullName: 'Sneha Ashwinbhai Padhiar',
-    username: 'snehapadhiar',
-    password: 'admin',
-    role: UserRole.FACULTY,
-    // enrollmentNumber: '', // Required if role === UserRole.STUDENT
-    // semester: '', // Required if role === UserRole.STUDENT
+    firstName: 'Vismit',
+    middleName: 'Jitendrabhai',
+    lastName: 'Mandlik',
+    fullName: 'Vismit Jitendrabhai Mandlik',
+    username: '21CE068',
+    password: '21CE068',
+    role: UserRole.STUDENT,
+    enrollmentNumber: '21CE068', // Required if role === UserRole.STUDENT
+    semester: 4, // Required if role === UserRole.STUDENT
   };
 
-  await UserModel.create(userDoc);
+  const user = await UserModel.create(userDoc);
+  console.log(
+    `User with id ${user._id} created.`,
+    JSON.stringify(user, null, 2)
+  );
 }
 
 async function main() {

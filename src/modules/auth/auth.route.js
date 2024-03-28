@@ -6,28 +6,29 @@ const router = express.Router();
 router.post('/login', async (req, res) => {
   try {
     const { username, password } = req.body;
-    const user = await UserModel.findOne({ username: username }).lean();
+    const userDoc = await UserModel.findOne({ username: username }).lean();
 
-    if (!user) {
+    if (!userDoc) {
       throw new Error('User not found');
     }
 
-    if (user.password !== password) res.redirect('/');
+    if (userDoc.password !== password) res.redirect('/');
 
-    if (user.role == UserRole.FACULTY) {
-      res.render('admin-dashboard', { user: user });
-    } else if (user.role === UserRole.STUDENT) {
-      res.render('student-dashboard', {
-        user: {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          fullName: user.fullName,
-          enrollmentNumber: user.enrollmentNumber,
-          role: user.role,
-        },
-      });
+    const user = {
+      firstName: userDoc.firstName,
+      lastName: userDoc.lastName,
+      fullName: userDoc.fullName,
+      username: userDoc.username,
+      enrollmentNumber: userDoc.enrollmentNumber,
+      role: userDoc.role,
+    };
+
+    if (userDoc.role == UserRole.FACULTY) {
+      res.render('admin-dashboard', { user });
+    } else if (userDoc.role === UserRole.STUDENT) {
+      res.render('student-dashboard', { user });
     } else {
-      console.error(`Invalid role ${user.role}`);
+      console.error(`Invalid role ${userDoc.role}`);
       res.redirect('/');
     }
   } catch (error) {
@@ -37,16 +38,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Admin Dashboard Route
-router.get('/admin-dashboard', async (req, res) => {
-  try {
-    const username = req.query.username;
-    res.render('admin-dashboard', { username: username });
-  } catch (error) {
-    console.error(error);
-    res.render('error');
-  }
-});
+
 
 // Register Faculty Route
 router.get('/register-faculty', async (req, res) => {
@@ -120,17 +112,6 @@ router.post('/change-password', async (req, res) => {
         .json({ error: `Validation error: ${error.message}` });
     }
     res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-//Student-dashboard
-router.get('/student-dashboard', async (req, res) => {
-  try {
-    const username = req.query.username;
-    res.render('student-dashboard', { username: username });
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error at /student-dashboard');
   }
 });
 
