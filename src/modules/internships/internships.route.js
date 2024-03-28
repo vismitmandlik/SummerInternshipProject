@@ -41,10 +41,7 @@ router.post('/', async (req, res) => {
 
 router.get('/approval-form', async (req, res) => {
   try {
-    const data = await InternshipModel.findOne().lean().sort({ StudentID: -1 });
-    res.render('approval-form', {
-      data,
-    });
+    res.render('approval-form');
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');
@@ -72,6 +69,15 @@ router.post(
   }
 );
 
+router.get('/confirmation-form', async (req, res) => {
+  try {
+    res.render('confirmation-form');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
 router.get('/:enrollmentNumber', async (req, res) => {
   try {
     const { enrollmentNumber } = req.params;
@@ -85,6 +91,15 @@ router.get('/:enrollmentNumber', async (req, res) => {
       return res.status(404).send('Student not found');
     }
     res.render('view-details', { internship });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+router.get('/completion-certificate', async (req, res) => {
+  try {
+    res.render('completion-certificate');
   } catch (error) {
     console.error(error);
     res.status(500).send('Internal Server Error');

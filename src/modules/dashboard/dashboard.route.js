@@ -15,7 +15,7 @@ router.get('/admin-dashboard', async (req, res) => {
 });
 
 //Student-dashboard
-router.get('/dashboard', async (req, res) => {
+router.get('/student-dashboard', async (req, res) => {
   try {
     const username = req.query.username;
     res.render('student-dashboard', { username: username });
